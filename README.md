@@ -6,7 +6,7 @@
 
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [🚫name service here](🚫add URL here) <br>
+#### 1️⃣ Backend delpoyed at [heroku](https://sauit-africa-market-price-be.herokuapp.com) <br>
 
 ## 1️⃣ Getting started
 
