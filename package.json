@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand",
-    "start": "node index.js"
+    "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand --coverage",
+    "start": "node index.js",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
