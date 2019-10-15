@@ -4,11 +4,15 @@ const helmet = require("helmet");
 const DBSt = require("../database/dbSTConfig");
 
 const server = express();
+
+//Initialize Moesif and set up the middleware
 const moesifExpress = require("moesif-express");
 const moesifMiddleware = moesifExpress({
   applicationId: process.env.MOESIF_ID,
   logBody: true
 });
+
+//Server uses middleware to add functionality
 server.use(moesifMiddleware);
 server.use(helmet());
 server.use(cors());
