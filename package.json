@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "jest --watchAll --verbose --forceExit",
+    "test": "jest --watchAll --verbose --detectOpenHandles --forceExit",
     "start": "node index.js"
   },
   "repository": {
