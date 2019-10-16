@@ -18,7 +18,7 @@ function getSautiData(query){
 
     let queryOperation = DBSt('platform_market_prices');
     if (query.c && !Array.isArray(query.c)) {
-        queryOperation = queryOperation.where('country', query.c);
+        queryOperation = queryOperation.where('country',query.c);
     } else {
         queryOperation = queryOperation.whereIn('country', query.c);
         console.log(query.c);
@@ -33,7 +33,10 @@ function getSautiData(query){
     if (query.product) {
         queryOperation = queryOperation.where('product', 'like', `%${query.product}%`);
     }
-    queryOperation = queryOperation.orderBy('date').limit(query.limit || 15);
+    if(query.listc){
+        queryOperation = queryOperation.select('country').count('product').groupBy('country')
+    }
+    queryOperation = queryOperation.orderBy('date').limit(query.limit || 500);
     return queryOperation;
 }
 
