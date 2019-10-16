@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const DBSt = require('../database/dbSTConfig');
+const testRoute = require('./testRoute.js')
 
 
 const server = express();
@@ -9,6 +10,7 @@ const server = express();
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use('/api/testRoute', testRoute)
 
 server.get('/', (req, res) => {
     res.send('working in my test server');
