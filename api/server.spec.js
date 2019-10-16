@@ -3,8 +3,7 @@ const app = require("./server");
 
 describe("server", () => {
     it("returns 200", async () => {
-        const res = await(app)
-        .get("/")
+        const res = await request(app).get("/")
 
         expect(res.statusCode).toEqual(200)
     })
