@@ -20,8 +20,8 @@ install:
   # use the new "ci" command for fastest installs on CI
   - npm i ci
 
-before_script:
-  - npm start -- --silent &
+#before_script:
+#  - npm start -- --silent &
 
 script:
   - npm run test
