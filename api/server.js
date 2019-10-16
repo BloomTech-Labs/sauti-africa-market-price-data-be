@@ -11,7 +11,7 @@ server.use(cors());
 server.use(express.json());
 
 server.get('/', (req, res) => {
-    res.send('working in my test server');
+    res.status(200).send('working in my test server');
   });
 function getThings(){
     return DBSt('platform_market_prices').orderBy('date').limit(10)
