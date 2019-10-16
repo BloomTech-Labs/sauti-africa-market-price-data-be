@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "jest --watch --verbose --passWithNoTests",
+    "test": "jest --watch --verbose",
     "start": "node index.js"
   },
   "repository": {
