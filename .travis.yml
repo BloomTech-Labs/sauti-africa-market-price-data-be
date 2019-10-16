@@ -24,4 +24,4 @@ install:
 #  - npm start -- --silent &
 
 script:
-  - npm run test
+  -set -e npm run test set +e
