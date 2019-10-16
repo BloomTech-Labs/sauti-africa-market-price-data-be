@@ -1,9 +1,8 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const DBSt = require('../database/dbSTConfig');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const DBSt = require("../database/dbSTConfig");
 // const testRoute = require('./testRoute.js')
-
 
 const server = express();
 
@@ -12,22 +11,25 @@ server.use(cors());
 server.use(express.json());
 // server.use('/api/testRoute', testRoute)
 
-server.get('/', (req, res) => {
-    res.status(200).send('working test server');
-  });
-function getThings(){
-    return DBSt('platform_market_prices').orderBy('date').limit(10)
+server.get("/", (req, res) => {
+  res.status(200).send("working test server");
+});
 
+function getThings() {
+  return DBSt("platform_market_prices")
+    .orderBy("date")
+    .limit(10);
 }
-server.get('/sauti', (req, res) => {
-    getThings().then(records => {
-        res.status(200).json(records)
+
+server.get("/sauti", (req, res) => {
+  getThings()
+    .then(records => {
+      res.status(200).json(records);
     })
     .catch(error => {
-        console.log(error)
-        res.status(500).send(error.message)
-    })
-    
-})
+      console.log(error);
+      res.status(500).send(error.message);
+    });
+});
 
 module.exports = server;
