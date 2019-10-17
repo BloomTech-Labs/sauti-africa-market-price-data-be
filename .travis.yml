@@ -18,11 +18,3 @@ cache:
 install:
   # use the new "ci" command for fastest installs on CI
   - npm i ci
-
-#before_script:
-#  - npm start -- --silent &
-
-# script:
-#   - set -e 
-#   - npm run test 
-#   - set +e
