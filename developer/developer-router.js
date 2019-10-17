@@ -12,7 +12,9 @@ router.get('/', (req, res) => {
         res.status(500).send(error.message)
     })
 })
+
 //getting the latest market price for a product across all markets
+//** Note that there is currently an error with this route. Does not return latest price for each market **/
 router.get('/latest', (req, res) => {
     Developer.latestPrice(req.query).then(records => {
         res.status(200).json(records)
@@ -22,7 +24,9 @@ router.get('/latest', (req, res) => {
         res.status(500).send(error.message)
     })
 })
+
 //getting the latest price of a product from a specific market
+//Requires product & market names as string
 router.get('/latestmarket', (req, res) => {
     Developer.latestPriceByMarket(req.query).then(records => {
         res.status(200).json(records)
@@ -33,6 +37,15 @@ router.get('/latestmarket', (req, res) => {
     })
 })
 
+//Getting list of products from product column
+router.get('/products', (req,res)=>{
+    Developer.getProducts().then(records => {
+        res.status(200).json(records)
+    }).catch(error => {
+        console.log(error)
+        res.status(500).send(error.message)
+    })
+})
 
 //Get list of unique products
 

@@ -3,7 +3,8 @@ const DBSt = require('../database/dbSTConfig');
 module.exports = {
     getSautiData,
     latestPrice,
-    latestPriceByMarket
+    latestPriceByMarket,
+    getProducts
 };
 
 // Helper function with filter searches for developer
@@ -59,12 +60,30 @@ function getSautiData(query){
 function latestPrice (query){
     const { product } = query
     let queryOperation = DBSt('platform_market_prices');
-    return queryOperation.select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate').distinct('market').where('product', `${product}`).groupBy('market').orderBy('udate', 'desc').limit(500)
-
+    return queryOperation
+        .select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate')
+        .where('product', `${product}`)
+        .groupBy('market')
+        .orderBy('udate', 'desc')
+        .limit(500);
 }
 
 function latestPriceByMarket(query){
     const { product, market } = query
     let queryOperation = DBSt('platform_market_prices');
-    return queryOperation.select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate').where('product', `${product}`).andWhere('market', `${market}`).orderBy('udate', 'desc').limit(500).first()
+    return queryOperation
+        .select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate')
+        .where('product', `${product}`).andWhere('market', `${market}`)
+        .orderBy('udate', 'desc')
+        .limit(500)
+        .first()
+}
+
+function getProducts() {
+    let queryOperation = DBSt('platform_market_prices');
+    return queryOperation
+        .distinct('product')
+        .orderBy('product')
+        .limit(500)
+        
 }
