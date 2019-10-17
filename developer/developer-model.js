@@ -4,7 +4,9 @@ module.exports = {
     getSautiData,
     latestPrice,
     latestPriceByMarket,
-    getProducts
+    getProducts,
+    getCountries,
+    getMarkets
 };
 
 // Helper function with filter searches for developer
@@ -57,6 +59,7 @@ function getSautiData(query){
         .limit(limit);
 }
 
+
 function latestPrice (query){
     const { product } = query
     let queryOperation = DBSt('platform_market_prices');
@@ -85,5 +88,20 @@ function getProducts() {
         .distinct('product')
         .orderBy('product')
         .limit(500)
-        
+}
+
+function getMarkets(){
+    let queryOperation = DBSt('platform_market_prices');
+    return queryOperation
+        .distinct('market')
+        .orderBy('market')
+        .limit(500)
+}
+
+function getCountries() {
+    let queryOperation = DBSt('platform_market_prices');
+    return queryOperation
+        .distinct('country')
+        .orderBy('country')
+        .limit(500)
 }

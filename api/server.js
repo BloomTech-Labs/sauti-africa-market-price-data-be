@@ -11,8 +11,8 @@ server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
-server.use('/developer', devRouter);
-server.use('/client', clientRouter);
+server.use('/sauti/developer', devRouter);
+server.use('/sauti/client', clientRouter);
 
 server.get('/', (req, res) => {
     res.send('working in my test server');

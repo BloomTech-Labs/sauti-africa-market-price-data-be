@@ -3,6 +3,7 @@ const express = require('express');
 const Developer = require('./developer-model.js');
 const router = express.Router();
 
+// Giant filter router 
 router.get('/', (req, res) => {
     Developer.getSautiData(req.query).then(records => {
         res.status(200).json(records)
@@ -47,14 +48,27 @@ router.get('/products', (req,res)=>{
     })
 })
 
-//Get list of unique products
-
 //Get list of unique markets
+router.get('/markets', (req,res)=>{
+    Developer.getMarkets().then(records => {
+        res.status(200).json(records)
+    }).catch(error => {
+        console.log(error)
+        res.status(500).send(error.message)
+    })
+})
 
 //get list of unique countries (returns currency type respective to its country)
+router.get('/countries', (req, res) => {
+    Developer.getCountries().then(records => {
+        res.status(200).json(records)
+    }).catch(error => {
+        console.log(error)
+        res.status(500).send(error.message)
+    })
 
-//get list of unique 
+})
+//get list of unique ????
 
-//get the latest price on a product
 
 module.exports = router;
