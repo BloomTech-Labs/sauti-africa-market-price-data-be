@@ -1,7 +1,9 @@
 const DBSt = require('../database/dbSTConfig');
 
 module.exports = {
-    getSautiData
+    getSautiData,
+    latestPrice,
+    latestPriceByMarket
 };
 
 // Helper function with filter searches for developer
@@ -52,4 +54,17 @@ function getSautiData(query){
         .orderBy(sortby, sortdir)
         .where('active', query.a=1)
         .limit(limit);
+}
+
+function latestPrice (query){
+    const { product } = query
+    let queryOperation = DBSt('platform_market_prices');
+    return queryOperation.select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate').distinct('market').where('product', `${product}`).groupBy('market').orderBy('udate', 'desc').limit(500)
+
+}
+
+function latestPriceByMarket(query){
+    const { product, market } = query
+    let queryOperation = DBSt('platform_market_prices');
+    return queryOperation.select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate').where('product', `${product}`).andWhere('market', `${market}`).orderBy('udate', 'desc').limit(500).first()
 }
