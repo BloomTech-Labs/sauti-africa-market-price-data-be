@@ -1,7 +1,7 @@
 language: node_js
 
 node_js: 
-  - stable
+  - node
 
 addons:
   apt:
@@ -13,8 +13,7 @@ addons:
 ## to avoid downloading Cypress again and again
 cache:
   directories:
-    - ~/.npm
-    - ~/.cache
+    - "node_modules"
 
 install:
   # use the new "ci" command for fastest installs on CI
