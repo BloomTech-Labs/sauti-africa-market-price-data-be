@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -8,7 +9,7 @@ const server = express();
 //Initialize Moesif and set up the middleware
 const moesifExpress = require("moesif-express");
 const moesifMiddleware = moesifExpress({
-  applicationId: process.env.MOESIF_ID,
+  applicationId: process.env.MOESIF_ID || undefined,
   logBody: true
 });
 
@@ -19,7 +20,7 @@ server.use(cors());
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  res.send("working in my test server");
+  res.status(200).send("working in my test server");
 });
 function getThings() {
   return DBSt("platform_market_prices")
