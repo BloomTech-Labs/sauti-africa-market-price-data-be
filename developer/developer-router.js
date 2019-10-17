@@ -13,4 +13,14 @@ router.get('/', (req, res) => {
     })
 })
 
+//Get list of unique products
+
+//Get list of unique markets
+
+//get list of unique countries (returns currency type respective to its country)
+
+//get list of unique 
+
+//get the latest price on a product
+
 module.exports = router;
