@@ -4,7 +4,9 @@ module.exports = {
     getSautiDataClient
 };
 
-// Helper function with filter searches for developer
+// Helper function with filter searches for client side
+// Notes: Flexible by allowing user to select whichever query they want.
+// Don't need to have each individual point to make a request.
 
 function getSautiDataClient(query){
 

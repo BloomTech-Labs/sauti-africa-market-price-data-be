@@ -5,6 +5,8 @@ module.exports = {
 };
 
 // Helper function with filter searches for developer
+// Notes: Flexible by allowing user to select whichever query they want.
+// Don't need to have each individual point to make a request.
 
 function getSautiData(query){
 
