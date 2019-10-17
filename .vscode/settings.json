@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "lambdaStaging",
+            "dialect": "MySQL",
+            "name": "Sauti DB",
+            "password": "JlgRzqmvh83Z",
+            "port": 0,
+            "server": "160.153.141.46",
+            "username": "lambda2019"
+        }
+    ]
+}
