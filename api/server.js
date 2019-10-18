@@ -1,24 +1,27 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const DBSt = require('../database/dbSTConfig');
-const apikeyRoute = require('./testRoute.js')
+const express = require("express")
+const cors = require("cors")
+const helmet = require("helmet")
+const DBSt = require("../database/dbSTConfig")
+const apikeyRoute = require("./testRoute.js")
 
 const server = express()
 
-server.use(helmet());
-server.use(cors());
-server.use(express.json());
+server.use(helmet())
+server.use(cors())
+server.use(express.json())
 
-server.use('/api/apikeyRoute', apikeyRoute)
+server.use("/api/apikeyRoute", apikeyRoute)
 
-server.get('/', (req, res) => {
-    res.send('working in my test server');
-  });
+server.get("/", (req, res) => {
+  res.send("working in my test server")
+})
 
-function getThings(){
-    return DBSt('platform_market_prices').orderBy('date').limit(10)
-  
+function getThings() {
+  return DBSt("platform_market_prices")
+    .orderBy("date")
+    .limit(10)
+}
+
 server.get("/sauti", (req, res) => {
   getThings()
     .then(records => {
