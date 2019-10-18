@@ -6,7 +6,8 @@
   "scripts": {
     "server": "nodemon index.js",
     "test": "jest --coverage --detectOpenHandles --forceExit",
-    "start": "node index.js"
+    "start": "node index.js",
+    "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "cross-env": "^6.0.3",
     "jest": "^24.9.0",
     "nodemon": "^1.19.3",
+    "prettier": "^1.18.2",
     "supertest": "^4.0.2"
   }
 }
