@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand --coverage",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
     "start": "node index.js",
-    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls"
+    "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,9 @@
   "devDependencies": {
     "cross-env": "^6.0.3",
     "jest": "^24.9.0",
-    "nodemon": "^1.19.3",
+    "nodemon": "^1.19.4",
+    "prettier": "^1.18.2",
+    "sqlite3": "^4.1.0",
     "supertest": "^4.0.2"
   }
 }
