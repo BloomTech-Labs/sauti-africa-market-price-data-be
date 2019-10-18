@@ -13,6 +13,7 @@ const jwtCheck = jwt({
     jwksRequestsPerMinute: 5,
     jwksUri: "http://sauti-africa-market-prices.auth0.com/.well-known/jwks.json"
   }),
+
   audience: "https://sauti-africa-market-prices.auth0.com/api/v2/",
   issuer: "http://sauti-africa-market-prices.auth0.com/",
   algorithms: ["RS256"]

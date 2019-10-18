@@ -11,7 +11,7 @@ server.use(helmet())
 server.use(cors())
 server.use(express.json())
 
-// server.use("/api/apikeyRoute", apikeyRoute)
+server.use("/api/apikeyRoute", apikeyRoute)
 
 server.get("/", (req, res) => {
   res.send("working in my test server")
