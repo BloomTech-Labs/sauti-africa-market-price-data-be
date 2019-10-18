@@ -1,11 +1,10 @@
-const request = require("supertest");
-const app = require("../api/server");
+const request = require("supertest")
+const app = require("../api/server")
 
 describe("server", () => {
   it("returns 200", async () => {
+    const res = await request(app).get("/")
 
-    const res = await request(app).get("/");
-
-    expect(res.statusCode).toEqual(200);
-  });
-});
+    expect(res.statusCode).toEqual(200)
+  })
+})
