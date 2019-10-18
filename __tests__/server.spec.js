@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("./server");
+const app = require("../api/server");
 
 describe("server", () => {
   it("returns 200", async () => {
