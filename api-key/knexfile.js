@@ -3,7 +3,7 @@ module.exports = {
   development: {
     client: "sqlite3",
     connection: {
-      filename: "./apiKey/apiKey.db3"
+      filename: "./apiKey.db3"
     },
     pool: {
       afterCreate: (conn, done) => {
@@ -11,10 +11,10 @@ module.exports = {
       }
     },
     migrations: {
-      directory: "./apiKey/migrations"
+      directory: "./migrations"
     },
     seeds: {
-      directory: "./apiKey/seeds"
+      directory: "./seeds"
     }
   },
 
