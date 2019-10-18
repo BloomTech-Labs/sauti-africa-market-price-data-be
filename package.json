@@ -4,10 +4,9 @@
   "description": "🚫 Note: All lines that start with 🚫 are instructions and should be deleted before this is posted to your portfolio. This is intended to be a guideline. Feel free to add your own flare to it.",
   "main": "index.js",
   "scripts": {
-    "preinstall": "npm install pm2 -g",
     "server": "nodemon index.js",
     "test": "jest --coverage --detectOpenHandles --forceExit",
-    "start": "pm2-runtime index.js -i max",
+    "start": "node index.js",
     "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
   },
   "repository": {
