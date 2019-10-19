@@ -21,7 +21,7 @@ const jwtCheck = jwt({
 
 router.get("/private", jwtCheck, async (req, res) => {
   const key = uuidAPIKey.create()
-  await db("api-key").insert({ key })
+  await db("api-keys").insert({ key })
   res.status(200).json({ key: key.apiKey })
 })
 
