@@ -2,8 +2,9 @@ const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 
-// const DBSt = require("../database/dbSTConfig")
+const DBSt = require("../database/dbSTConfig")
 const apikeyRoute = require("./apiKeyRoute")
+const gandalf = require("../middleware/apikey-middleware")
 
 const server = express()
 
@@ -23,7 +24,7 @@ function getThings() {
     .limit(10)
 }
 
-server.get("/sauti", (req, res) => {
+server.get("/sauti", gandalf, (req, res) => {
   getThings()
     .then(records => {
       res.status(200).json(records)

@@ -1,9 +1,18 @@
 const db = require("../api-key/dbConfig")
 
 module.exports = async (req, res, next) => {
-  const { key } = req.header
+  const { key } = req.headers
+  let validKey = null
 
-  const validKey = await db("api-keys").where({ key })
+  if (key) {
+    try {
+      validKey = await db("apiKeys")
+        .where({ key })
+        .first()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   validKey
     ? next()

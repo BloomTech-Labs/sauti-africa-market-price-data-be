@@ -13,9 +13,6 @@ module.exports = {
     migrations: {
       directory: "./api-key/migrations"
     },
-    // seeds: {
-    //   directory: "./seeds"
-    // },
     useNullAsDefault: true
   },
   testing: {
