@@ -1,5 +1,5 @@
-// Update with your config settings.
 module.exports = {
+  /*=== development ===*/
   development: {
     client: "sqlite3",
     connection: {
@@ -15,19 +15,25 @@ module.exports = {
     },
     useNullAsDefault: true
   },
+
+  /*=== testing ===*/
   testing: {
     client: "sqlite3",
     connection: {
-      filename: "./database/test.db3"
+      filename: ":memory:"
+    },
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run("PRAGMA foreign_keys = ON", done)
+      }
     },
     useNullAsDefault: true,
     migrations: {
-      directory: "./database/migrations"
-    },
-    seeds: {
-      directory: "./database/seeds"
+      directory: "./api-key/migrations"
     }
   },
+
+  /*=== production ===*/
   production: {
     client: "pg", // install this package
     connection: process.env.DATABASE_URL, // heroku sets this env variable
@@ -38,6 +44,8 @@ module.exports = {
       directory: "./database/seeds"
     }
   },
+
+  /*=== Sauti Africa Market Database ===*/
   sauti: {
     client: "mysql", // install this package
     connection: process.env.ST_DATABASE_URL

@@ -2,8 +2,8 @@ const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 
-const DBSt = require("../database/dbSTConfig")
-const apikeyRoute = require("./apiKeyRoute")
+const DBSt = require("../sauti/dbSTConfig")
+const apikeyRoute = require("../routes/apikeyRoute")
 const gandalf = require("../middleware/apikey-middleware")
 
 const server = express()

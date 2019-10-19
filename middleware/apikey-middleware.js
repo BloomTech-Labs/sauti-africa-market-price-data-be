@@ -2,6 +2,7 @@ const db = require("../api-key/dbConfig")
 
 module.exports = async (req, res, next) => {
   const { key } = req.headers
+
   let validKey = null
 
   if (key) {
