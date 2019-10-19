@@ -2,9 +2,8 @@
 module.exports = {
   development: {
     client: "sqlite3",
-    useNullAsDefault: true,
     connection: {
-      filename: "./database/salt.db3"
+      filename: "./api-key/apiKey.db3"
     },
     pool: {
       afterCreate: (conn, done) => {
@@ -12,11 +11,12 @@ module.exports = {
       }
     },
     migrations: {
-      directory: "./database/migrations"
+      directory: "./api-key/migrations"
     },
-    seeds: {
-      directory: "./database/seeds"
-    }
+    // seeds: {
+    //   directory: "./seeds"
+    // },
+    useNullAsDefault: true
   },
   testing: {
     client: "sqlite3",
