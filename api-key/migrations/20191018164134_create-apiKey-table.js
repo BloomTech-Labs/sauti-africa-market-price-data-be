@@ -1,5 +1,5 @@
 exports.up = function(knex) {
-  return knex.schema.createTable("api-keys", tbl => {
+  return knex.schema.createTable("apiKeys", tbl => {
     tbl.increments()
     tbl
       .text("key", 128)
@@ -9,5 +9,5 @@ exports.up = function(knex) {
 }
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("accounts")
+  return knex.schema.dropTableIfExists("apiKeys")
 }

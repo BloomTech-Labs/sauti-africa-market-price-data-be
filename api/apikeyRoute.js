@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
 const jwt = require("express-jwt")
-const jwtAuthz = require("express-jwt-authz")
 const jwks = require("jwks-rsa")
 const uuidAPIKey = require("uuid-apikey")
 
@@ -22,8 +21,13 @@ const jwtCheck = jwt({
 
 router.get("/private", jwtCheck, async (req, res) => {
   const key = uuidAPIKey.create()
-  await db("api-keys").insert({ key })
-  res.status(200).json({ key: key.apiKey })
+  console.log(key)
+  try {
+    await db("apiKeys").insert({ key: key.apiKey })
+    res.status(200).json({ key: key.apiKey })
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 module.exports = router
