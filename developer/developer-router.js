@@ -68,7 +68,34 @@ router.get('/countries', (req, res) => {
     })
 
 })
-//get list of unique ????
 
+//Req.query needs product,startDate,endDate and returns a range of records
+//startDate is older than endDate
+router.get("/products/range", (req, res) => {
+    const { product, startDate, endDate } = req.query;
+    Developer.getProductPriceRange(product, startDate, endDate)
+      .then(records => {
+        res.status(200).json(records);
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(500).send(error.message);
+      });
+});
+  
+//URL needs to have keys: count and page at
+//records returns all rows as per number of records in each page
+//default is 20 records per page
+router.get("/records", (req, res) => {
+    const { count, page } = req.query;
+    Developer.getAllRecords(count, page)
+    .then(records => {
+        res.status(200).json(records);
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).send(error.message);
+    });
+});
 
 module.exports = router;

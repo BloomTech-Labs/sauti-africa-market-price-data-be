@@ -6,7 +6,9 @@ module.exports = {
     latestPriceByMarket,
     getProducts,
     getCountries,
-    getMarkets
+    getMarkets,
+    getAllRecords,
+    getProductPriceRange
 };
 
 // Helper function with filter searches for developer
@@ -76,6 +78,7 @@ function getSautiData(query){
     }
 
     return queryOperation
+        .select('country','market','product_cat','product_agg','product','retail','wholesale','currency','unit','udate')
         .orderBy(sortby, sortdir)
         .where('active', query.a=1)
         .limit(limit);
@@ -132,4 +135,29 @@ function getCountries() {
         .distinct('country')
         .orderBy('country')
         .limit(500)
+}
+
+function getAllRecords(count, page) {
+    if (count) {
+      count = parseInt(count);
+    } else {
+      count = 20;
+    }
+    if (page) {
+      page = (parseInt(page) - 1) * count;
+    } else {
+      page = 0;
+    }
+  
+    return DBSt("platform_market_prices")
+      .select("*")
+      .limit(count)
+      .offset(page);
+}
+  
+function getProductPriceRange(product, startDate, endDate) {
+    return DBSt("platform_market_prices")
+      .select("*")
+      .where("product", product)
+      .andWhereBetween("udate", [startDate, endDate]);
 }
