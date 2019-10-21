@@ -2,56 +2,23 @@ const DBSt = require("../database/dbSTConfig")
 
 module.exports = {
   getSautiData,
-  getProducts,
-  getCountries,
-  getMarkets,
   latestPriceByMarket,
   latestPriceAcrossAllMarkets,
   getAllRecords,
-  getProductPriceRange
+  getProductPriceRange,
+  getListsOfThings,
 }
 
 // Helper function with filter searches for developer
 // Notes: Flexible by allowing user to select whichever query they want.
 
 function getSautiData(query) {
-  let queryOperation = DBSt("platform_market_prices")
+  let queryOperation = DBSt("platform_market_prices2")
   const {
     sortby = "udate",
     sortdir = "desc",
     limit = query.limit || 50
   } = query
-
-  // // If user wants data from specific country/countries
-  // if (query.c) {
-  //     let country = JSON.parse(query.c);
-  //     queryOperation = queryOperation.whereIn('country', country);
-  // }
-
-  // //If user needs the market
-  // if (query.market) {
-  //     let market = JSON.parse(query.market);
-  //     queryOperation = queryOperation.whereIn('market', market);
-  // }
-
-  // //If user needs a product category
-  // if (query.pcat) {
-  //     let pcat = JSON.parse(query.pcat);
-  //     queryOperation.whereIn('product_cat', pcat);
-  // }
-
-  // //If user needs a subset of the product category
-  // if (query.pagg) {
-  //     let pagg = JSON.parse(query.pagg);
-  //     queryOperation.whereIn('product_agg', pagg);
-
-  // }
-
-  // //If user needs a specific product
-  // if (query.p) {
-  //     let p = JSON.parse(query.p);
-  //     queryOperation.whereIn('product', p);
-  // }
 
   // If user wants data from specific country/countries
   if (query.c && !Array.isArray(query.c)) {
@@ -95,6 +62,7 @@ function getSautiData(query) {
     .select(
       "country",
       "market",
+      "source",
       "product_cat",
       "product_agg",
       "product",
@@ -102,6 +70,7 @@ function getSautiData(query) {
       "wholesale",
       "currency",
       "unit",
+      "date",
       "udate"
     )
     .orderBy(sortby, sortdir)
@@ -112,27 +81,28 @@ function getSautiData(query) {
 function latestPriceAcrossAllMarkets(query) {
   const { product } = query
   return DBSt.schema.raw(
-    `SELECT pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.udate FROM platform_market_prices AS pmp INNER JOIN
+    `SELECT pmp.source, pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.date, pmp.udate FROM platform_market_prices2 AS pmp INNER JOIN
     (
-        SELECT max(udate) as maxDate, market, product, retail, wholesale 
-       FROM platform_market_prices
+        SELECT max(date) as maxDate, market, product, retail, wholesale, source, udate 
+       FROM platform_market_prices2
        WHERE product=?
        GROUP BY market
    ) p2 
    ON pmp.market = p2.market
-    AND pmp.udate = p2.maxDate
+    AND pmp.date = p2.maxDate
      WHERE pmp.product=?
-     order by pmp.udate desc`,
+     order by pmp.date desc`,
     [product, product]
   )
 }
 
 function latestPriceByMarket(query) {
   const { product, market } = query
-  let queryOperation = DBSt("platform_market_prices")
+  let queryOperation = DBSt("platform_market_prices2")
   return queryOperation
     .select(
       "market",
+      "source",
       "country",
       "currency",
       "product",
@@ -144,29 +114,24 @@ function latestPriceByMarket(query) {
     .where("product", `${product}`)
     .andWhere("market", `${market}`)
     .orderBy("date", "desc")
-    .limit(500)
     .first()
 }
 
-function getProducts() {
-  return DBSt("platform_market_prices")
-    .distinct("product")
-    .orderBy("product")
-    .limit(500)
-}
+function getListsOfThings(query, selector) {
+  let queryOperation = DBSt("platform_market_prices2")
 
-function getMarkets() {
-  return DBSt("platform_market_prices")
-    .distinct("market")
-    .orderBy("market")
-    .limit(500)
-}
-
-function getCountries() {
-  return DBSt("platform_market_prices")
-    .distinct("country")
-    .orderBy("country")
-    .limit(500)
+  switch (query.toLowerCase()) {
+    case "marketlist":
+      return queryOperation.distinct("market").orderBy("market")
+    case "countrylist":
+      return queryOperation.distinct("country").orderBy("country")
+    case "sourcelist":
+      return queryOperation.distinct("source").orderBy("source")
+    case "productlist":
+      return queryOperation.distinct("product").orderBy("product")
+    default:
+      return queryOperation.limit(10)
+  }
 }
 
 function getAllRecords(count, page) {
@@ -181,15 +146,45 @@ function getAllRecords(count, page) {
     page = 0
   }
 
-  return DBSt("platform_market_prices")
+  return DBSt("platform_market_prices2")
     .select("*")
     .limit(count)
     .offset(page)
 }
 
 function getProductPriceRange(product, startDate, endDate) {
-  return DBSt("platform_market_prices")
+  return DBSt("platform_market_prices2")
     .select("*")
     .where("product", product)
-    .andWhereBetween("udate", [startDate, endDate])
+    .andWhereBetween("date", [startDate, endDate])
 }
+
+// function kathrynAttempt(query){
+//   const {list} = query
+//   return DBSt("platform_market_prices2").distinct(list).orderBy(list)
+// }
+
+
+// function getProducts() {
+//   return DBSt("platform_market_prices2")
+//     .distinct("product")
+//     .orderBy("product")
+// }
+
+// function getMarkets() {
+//   return DBSt("platform_market_prices2")
+//     .distinct("market")
+//     .orderBy("market")
+// }
+
+// function getCountries() {
+//   return DBSt("platform_market_prices2")
+//     .distinct("country")
+//     .orderBy("country")
+// }
+
+// function getSources() {
+//   return DBSt("platform_market_prices2")
+//     .distinct("source")
+//     .orderBy("source")
+// }

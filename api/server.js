@@ -16,8 +16,8 @@ server.use(express.json())
 
 server.use("/api/apikeyRoute", apikeyRoute)
 
-server.use("/sauti/developer", gandalf, devRouter)
-server.use("/sauti/client", gandalf, clientRouter)
+server.use("/sauti/developer", devRouter)
+server.use("/sauti/client", clientRouter)
 
 server.get("/", (req, res) => {
   res.send("working in my test server")
