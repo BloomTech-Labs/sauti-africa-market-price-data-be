@@ -1,13 +1,12 @@
-
 const express = require("express")
 const cors = require("cors")
 const helmet = require("helmet")
 
-const DBSt = require("../sauti/dbSTConfig")
+const DBSt = require("../database/dbSTConfig")
 const apikeyRoute = require("../routes/apikeyRoute")
 const gandalf = require("../middleware/apikey-middleware")
-const devRouter = require('../developer/developer-router.js');
-const clientRouter = require('../client/client-router.js');
+const devRouter = require("../developer/developer-router.js")
+const clientRouter = require("../client/client-router.js")
 
 const server = express()
 
@@ -17,8 +16,8 @@ server.use(express.json())
 
 server.use("/api/apikeyRoute", apikeyRoute)
 
-server.use('/sauti/developer', devRouter);
-server.use('/sauti/client', clientRouter);
+server.use("/sauti/developer", gandalf, devRouter)
+server.use("/sauti/client", gandalf, clientRouter)
 
 server.get("/", (req, res) => {
   res.send("working in my test server")

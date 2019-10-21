@@ -5,17 +5,20 @@ describe("server", () => {
   it("returns 200", async () => {
     const res = await request(app).get("/")
 
-    expect(res.statusCode).toEqual(200)
+    expect(res.status).toEqual(200)
   })
 })
 
 /*=== tests for api key flow ===*/
-/*
-describe("apikey stuff", () => {
-  it("does something", () => {
-    const res = await request(app).get("/api/apikeyRoute/private")
 
-    expect(res.statusCode).toEqual(403)
+describe("API Key Authentication", () => {
+  it("/sauti route should be forbidden without key", async () => {
+    const res = await request(app).get("/sauti")
+    expect(res.status).toEqual(403)
   })
-}
-*/
+
+  // it("/sauti route should be forbidden without key", async () => {
+  //   const res = await request(app).get("/sauti")
+  //   expect(res.status).toEqual(403)
+  // })
+})
