@@ -2,12 +2,11 @@ const DBSt = require('../database/dbSTConfig');
 
 module.exports = {
     getSautiData,
-    latestPrice,
-    latestPriceByMarket,
     getProducts,
     getCountries,
     getMarkets,
-    latestPriceAcrossAllMarkets
+    latestPriceByMarket,
+    latestPriceAcrossAllMarkets,
     getAllRecords,
     getProductPriceRange
 };
@@ -51,12 +50,21 @@ function getSautiData(query){
     //     queryOperation.whereIn('product', p);
     // }
 
+    // If user wants data from specific country/countries
+    if (query.c && !Array.isArray(query.c)) {
+        queryOperation = queryOperation.whereIn('country', [query.c]);
+    } else if (query.c && Array.isArray(query.c)){
+        queryOperation = queryOperation.whereIn('country', query.c);
+    }
+
+    // If user wants data from specific markets
     if (query.market && !Array.isArray(query.market)) {
         queryOperation = queryOperation.whereIn('market', [query.market]);
     } else if (query.market && Array.isArray(query.market)){
         queryOperation = queryOperation.whereIn('market', query.market);
     }
     
+    //if user wants data from spcific product categories
     if (query.pcat && !Array.isArray(query.pcat)) {
         //pcat = product category (product_cat) -> General
         queryOperation = queryOperation.whereIn('product_cat', [query.pcat]);
@@ -64,13 +72,15 @@ function getSautiData(query){
         queryOperation = queryOperation.whereIn('product_cat', query.pcat);
     }
     
+    //if user wnats data from product subcategory
     if (query.pagg && !Array.isArray(query.pagg)) {
         //pagg = product_agg -> product type
         queryOperation = queryOperation.whereIn('product_agg', [query.pagg]);
     } else if (query.pagg && Array.isArray(query.pagg)){
         queryOperation = queryOperation.whereIn('product_agg', query.pagg);
     }
-    
+
+    //if user wants data of specific products
     if (query.p && !Array.isArray(query.p)) {
         //p = product -> Specific product
         queryOperation = queryOperation.whereIn('product', [query.p]);
@@ -83,27 +93,6 @@ function getSautiData(query){
         .orderBy(sortby, sortdir)
         .where('active', query.a=1)
         .limit(limit);
-}
-
-
-function latestPrice(query){
-
-    const { product } = query
-    let queryOperation = DBSt('platform_market_prices');
-    return queryOperation
-        .select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate')
-        .where('product', `${product}`)
-        .groupBy('market')
-        .orderBy('udate', 'desc')
-        .limit(500);
-        
-        // knex.raw('SELECT' pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.udate 
-        // FROM platform_market_prices as pmp INNER JOIN (SELECT max(udate) as maxDate, market
-        // FROM platform_market_prices
-        // WHERE product='yellow beans'
-        // GROUP BY market ) 
-        // p2 ON pmp.market = p2.market AND pmp.udate = p2.maxDate WHERE pmp.product=`${product}` 
-        // order by pmp.udate desc)
 }
 
 function latestPriceAcrossAllMarkets(query){
