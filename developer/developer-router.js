@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
 //getting the latest market price for a product across all markets
 router.get('/latest', (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query).then(records => {
-        res.status(200).json(records)
+        res.status(200).json(records[0])
     })
     .catch(error => {
         console.log(error)

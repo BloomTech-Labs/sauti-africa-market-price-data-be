@@ -115,9 +115,9 @@ function latestPriceByMarket(query){
     const { product, market } = query
     let queryOperation = DBSt('platform_market_prices');
     return queryOperation
-        .select('market', 'country','currency', 'product', 'retail', 'wholesale', 'udate')
+        .select('market', 'country','currency', 'product', 'retail', 'wholesale','date', 'udate')
         .where('product', `${product}`).andWhere('market', `${market}`)
-        .orderBy('udate', 'desc')
+        .orderBy('date', 'desc')
         .limit(500)
         .first()
 }
