@@ -6,7 +6,8 @@ module.exports = {
     latestPriceByMarket,
     getProducts,
     getCountries,
-    getMarkets
+    getMarkets,
+    latestPriceAcrossAllMarkets
 };
 
 // Helper function with filter searches for developer
@@ -69,6 +70,22 @@ function latestPrice (query){
         .groupBy('market')
         .orderBy('udate', 'desc')
         .limit(500);
+}
+
+function latestPriceAcrossAllMarkets(query){
+    const {product }= query
+    return DBSt.schema.raw(`SELECT pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.udate FROM platform_market_prices AS pmp INNER JOIN
+    (
+        SELECT max(udate) as maxDate, market, product, retail, wholesale 
+       FROM platform_market_prices
+       WHERE product=?
+       GROUP BY market
+   ) p2 
+   ON pmp.market = p2.market
+    AND pmp.udate = p2.maxDate
+     WHERE pmp.product=?
+     order by pmp.udate desc`,  [ product, product])   
+
 }
 
 function latestPriceByMarket(query){
