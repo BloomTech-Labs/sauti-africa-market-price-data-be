@@ -14,11 +14,23 @@ module.exports = {
 
 function getSautiData(query) {
   let queryOperation = DBSt("platform_market_prices2")
-  const {
-    sortby = "udate",
+  let {
+    sortby = "date",//here
     sortdir = "desc",
-    limit = query.limit || 50
+    count,
+    page
   } = query
+
+  if (count) {
+    count = parseInt(count)
+  } else {
+    count = 20
+  }
+  if (page) {
+    page = (parseInt(page) - 1) * count
+  } else {
+    page = 0
+  }
 
   // If user wants data from specific country/countries
   if (query.c && !Array.isArray(query.c)) {
@@ -75,15 +87,16 @@ function getSautiData(query) {
     )
     .orderBy(sortby, sortdir)
     .where("active", (query.a = 1))
-    .limit(limit)
+    .limit(count)
+    .offset(page)
 }
 
 function latestPriceAcrossAllMarkets(query) {
   const { product } = query
   return DBSt.schema.raw(
-    `SELECT pmp.source, pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.date, pmp.udate FROM platform_market_prices2 AS pmp INNER JOIN
+    `SELECT pmp.source, pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.currency, pmp.date, pmp.udate FROM platform_market_prices2 AS pmp INNER JOIN
     (
-        SELECT max(date) as maxDate, market, product, retail, wholesale, source, udate 
+        SELECT max(date) as maxDate, market, product, retail, currency, wholesale, source, udate 
        FROM platform_market_prices2
        WHERE product=?
        GROUP BY market
@@ -121,13 +134,13 @@ function getListsOfThings(query, selector) {
   let queryOperation = DBSt("platform_market_prices2")
 
   switch (query.toLowerCase()) {
-    case "marketlist":
+    case "market":
       return queryOperation.distinct("market").orderBy("market")
-    case "countrylist":
+    case "country":
       return queryOperation.distinct("country").orderBy("country")
-    case "sourcelist":
+    case "source":
       return queryOperation.distinct("source").orderBy("source")
-    case "productlist":
+    case "product":
       return queryOperation.distinct("product").orderBy("product")
     default:
       return queryOperation.limit(10)
