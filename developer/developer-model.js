@@ -165,11 +165,23 @@ function getAllRecords(count, page) {
     .offset(page)
 }
 
-function getProductPriceRange(product, startDate, endDate) {
+function getProductPriceRange(product, startDate, endDate, count, page) {
+  if (count) {
+    count = parseInt(count)
+  } else {
+    count = 20
+  }
+  if (page) {
+    page = (parseInt(page) - 1) * count
+  } else {
+    page = 0
+  }
+
   return DBSt("platform_market_prices2")
     .select("*")
     .where("product", product)
-    .andWhereBetween("date", [startDate, endDate])
+    .andWhereBetween("date", [startDate, endDate]).limit(count)
+    .offset(page)
 }
 
 // function kathrynAttempt(query){

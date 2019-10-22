@@ -43,6 +43,7 @@ To get the server running locally:
 | GET    | `/sauti/developer/products/range/?product=yellow%20beans&startDate=07-01-2019&endDate=08-01-2019` | returns price information on a particular product across a date range                      |
 | GET    | `/sauti/developer/?c=uga&c=tza&market=mombasa&market=Masindi&pcat=beans&pagg=beans&p=beans&p=yellow%20beans&count=2&page=2` |  filters data with countries, markets, sub levels of products, and can set up pagination with count and page    |
 | GET    | `/sauti/developer/latest/?product=yellow%20beans` |  returns the latest price of a particular product across all markets                     |
+| GET    | `/sauti/developer/records?count=20&page=1` |  returns all the records limited by a specified count per page              |
 
 #### User Routes
 

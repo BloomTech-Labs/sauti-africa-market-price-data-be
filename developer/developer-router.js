@@ -61,32 +61,33 @@ router.get("/lists", (req,res)=> {
 
 //Req.query needs product,startDate,endDate and returns a range of records
 //startDate is older than endDate
-router.get("/products/range", (req, res) => {
-    const { product, startDate, endDate } = req.query
-    Developer.getProductPriceRange(product, startDate, endDate)
+//requires further validation possibly with moment.js to validate the date values//stretch goal for later
+router.get("/products/range", validate.queryProductDate, validate.queryCountPage, (req, res) => {
+    const { product, startDate, endDate, page, count } = req.query
+    Developer.getProductPriceRange(product, startDate, endDate, count, page)
       .then(records => {
-        res.status(200).json(records)
+        res.status(200).json({message:req.message,records:records})
       })
       .catch(error => {
         console.log(error)
         res.status(500).send(error.message)
       })
-  })
+})
   
-  //URL needs to have keys: count and page at
-  //records returns all rows as per number of records in each page
-  //default is 20 records per page
-  router.get("/records", (req, res) => {
-    const { count, page } = req.query
-    Developer.getAllRecords(count, page)
-      .then(records => {
-        res.status(200).json(records)
-      })
-      .catch(error => {
-        console.log(error)
-        res.status(500).send(error.message)
-      })
-  })
+//URL needs to have keys: count and page at
+//records returns all rows as per number of records in each page
+//default is 20 records per page
+router.get("/records", validate.queryCountPage, (req, res) => {
+  const { count, page } = req.query
+  Developer.getAllRecords(count, page)
+    .then(records => {
+      res.status(200).json({message:req.message,records:records})
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).send(error.message)
+    })
+})
 
 //Getting list of products from product column
 // router.get("/products", (req, res) => {

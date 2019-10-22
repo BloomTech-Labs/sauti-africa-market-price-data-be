@@ -1,6 +1,8 @@
 module.exports = {
     queryProduct,
-    queryProductMarket
+    queryProductMarket,
+    queryProductDate,
+    queryCountPage,
 } 
 
 
@@ -14,6 +16,19 @@ function queryProduct (req,res,next){
     }
 }
 
+function queryCountPage(req,res,next){
+    if(req.query.count > 500)
+    {
+        req.message = "Each page can have maximum of 500 records";
+        req.query.count = 500;
+        next();
+    }
+    else{
+        next();
+    }
+
+}
+
 function queryProductMarket(req,res,next){
     if(req.query.product === undefined)
     {
@@ -21,6 +36,22 @@ function queryProductMarket(req,res,next){
     }
     else if(req.query.market === undefined){
         res.status(400).json({errorMessage:"Please supply the query parameter of 'market' "})
+    }
+    else{
+        next()
+    }
+}
+
+function queryProductDate(req,res,next){
+    if(req.query.product === undefined)
+    {
+        res.status(400).json({errorMessage:"Please supply the query parameter of 'product' "})
+    }
+    else if(req.query.startDate === undefined){
+        res.status(400).json({errorMessage:"Please supply the query parameter of 'startDate' "})
+    }
+    else if(req.query.endDate === undefined){
+        res.status(400).json({errorMessage:"Please supply the query parameter of 'endDate' "})
     }
     else{
         next()
