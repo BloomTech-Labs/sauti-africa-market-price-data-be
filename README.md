@@ -33,17 +33,19 @@ To get the server running locally:
 🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
 
 #### Developer Routes
+
 - Access Control: Access of these endpoints given to developers through API keys.
 - All endpoints make use of query strings
 
-| Method | Example Endpoint                                                    | Description                                   |
-| ------ | ----------------------------------------------------------- | --------------------------------------------- |
-| GET    | `/sauti/developer/latestmarket/?market=mombasa&product=yellow%20beans` |  return the latest price of a particular product from a particular market            |
-| GET    | `/sauti/developer/lists/?list=market` | returns a list of a either markets, countries, products, or sources                      |
-| GET    | `/sauti/developer/products/range/?product=yellow%20beans&startDate=07-01-2019&endDate=08-01-2019` | returns price information on a particular product across a date range                      |
-| GET    | `/sauti/developer/?c=uga&c=tza&market=mombasa&market=Masindi&pcat=beans&pagg=beans&p=beans&p=yellow%20beans&count=2&page=2` |  filters data with countries, markets, sub levels of products, and can set up pagination with count and page    |
-| GET    | `/sauti/developer/latest/?product=yellow%20beans` |  returns the latest price of a particular product across all markets                     |
-| GET    | `/sauti/developer/records?count=20&page=1` |  returns all the records limited by a specified count per page              |
+| Method | Example Endpoint                                                                                                                  | Description                                                                                                 |
+| ------ | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| GET    | `/sauti/developer/product/late/pricebymarket?market=mombasa&product=yellow%20beans`                                               | return the latest price of a particular product from a particular market                                    |
+| GET    | `/sauti/developer/lists/?list=market`                                                                                             | returns a list of a either markets, countries, products, or sources                                         |
+| GET    | `/sauti/developer/product/range/?product=yellow%20beans&startDate=07-01-2019&endDate=08-01-2019`                                  | returns price information on a particular product across a date range                                       |
+| GET    | `/sauti/developer/filter?c=uga&c=tza&market=mombasa&market=Masindi&pcat=beans&pagg=beans&p=beans&p=yellow%20beans&count=2&page=2` | filters data with countries, markets, sub levels of products, and can set up pagination with count and page |
+| GET    | `/sauti/developer/product/latestprice?product=yellow%20beans`                                                                     | returns the latest price of a particular product across all markets                                         |
+
+=
 
 #### User Routes
 
@@ -58,20 +60,28 @@ To get the server running locally:
 
 # Data Model
 
-🚫This is just an example. Replace this with your data model
+🌴Database is provided by our Stakeholder from Sauti Africa
 
-#### 2️⃣ ORGANIZATIONS
+#### 2️⃣ Market Price Table
 
 ---
 
 ```
 {
-  id: UUID
-  name: STRING
-  industry: STRING
-  paid: BOOLEAN
-  customer_id: STRING
-  subscription_id: STRING
+  id: int(5)
+  source: varchar(20)
+  country: varchar(5)
+  market: varchar(300)
+  product_cat: varchar(300)
+  product_agg: varchar(300)
+  product: varchar(300)
+  date: datetime
+  retail: int(7)
+  wholesale:int(7)
+  currency: varchar(3)
+  unit: varchar(20)
+  active: tinyint(1)
+  udate: timestamp
 }
 ```
 
