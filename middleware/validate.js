@@ -1,5 +1,6 @@
 module.exports = {
-    queryProduct
+    queryProduct,
+    queryProductMarket
 } 
 
 
@@ -12,6 +13,20 @@ function queryProduct (req,res,next){
         next()
     }
 }
+
+function queryProductMarket(req,res,next){
+    if(req.query.product === undefined)
+    {
+        res.status(400).json({errorMessage:"Please supply the query parameter of 'product' "})
+    }
+    else if(req.query.market === undefined){
+        res.status(400).json({errorMessage:"Please supply the query parameter of 'market' "})
+    }
+    else{
+        next()
+    }
+}
+
 const validParams = ["country", "currency"];
 const query = {
   country: "Uganda",

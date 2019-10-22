@@ -132,7 +132,7 @@ function latestPriceByMarket(query) {
 
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt("platform_market_prices2")
-
+  if(query === undefined){query = 'market'}
   switch (query.toLowerCase()) {
     case "market":
       return queryOperation.distinct("market").orderBy("market")
@@ -143,7 +143,7 @@ function getListsOfThings(query, selector) {
     case "product":
       return queryOperation.distinct("product").orderBy("product")
     default:
-      return queryOperation.limit(10)
+      return queryOperation.distinct("market").orderBy("market")
   }
 }
 

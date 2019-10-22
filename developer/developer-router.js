@@ -34,10 +34,12 @@ router.get("/latest", validate.queryProduct, (req, res) => {
 
 //getting the latest price of a product from a specific market
 //Requires product & market names as string
-router.get("/latestmarket", (req, res) => {
+router.get("/latestmarket", validate.queryProductMarket, (req, res) => {
   Developer.latestPriceByMarket(req.query)
     .then(records => {
-      res.status(200).json(records)
+      if(records){
+      res.status(200).json(records)}
+      else{res.status(404).json({message:"That product and market combination doesn't exist, please check spelling and list of products and markets"})}
     })
     .catch(error => {
       console.log(error)
