@@ -6,7 +6,7 @@ module.exports = {
   latestPriceAcrossAllMarkets,
   getAllRecords,
   getProductPriceRange,
-  getListsOfThings,
+  getListsOfThings
 }
 
 // Helper function with filter searches for developer
@@ -14,12 +14,7 @@ module.exports = {
 
 function getSautiData(query) {
   let queryOperation = DBSt("platform_market_prices2")
-  let {
-    sortby = "date",//here
-    sortdir = "desc",
-    count,
-    page
-  } = query
+  let { count, page } = query
 
   if (count) {
     count = parseInt(count)
@@ -85,7 +80,7 @@ function getSautiData(query) {
       "date",
       "udate"
     )
-    .orderBy(sortby, sortdir)
+    .orderBy("date", "desc")
     .where("active", (query.a = 1))
     .limit(count)
     .offset(page)
@@ -132,7 +127,9 @@ function latestPriceByMarket(query) {
 
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt("platform_market_prices2")
-  if(query === undefined){query = 'market'}
+  if (query === undefined) {
+    query = "market"
+  }
   switch (query.toLowerCase()) {
     case "market":
       return queryOperation.distinct("market").orderBy("market")
@@ -180,7 +177,8 @@ function getProductPriceRange(product, startDate, endDate, count, page) {
   return DBSt("platform_market_prices2")
     .select("*")
     .where("product", product)
-    .andWhereBetween("date", [startDate, endDate]).limit(count)
+    .andWhereBetween("date", [startDate, endDate])
+    .limit(count)
     .offset(page)
 }
 
@@ -188,7 +186,6 @@ function getProductPriceRange(product, startDate, endDate, count, page) {
 //   const {list} = query
 //   return DBSt("platform_market_prices2").distinct(list).orderBy(list)
 // }
-
 
 // function getProducts() {
 //   return DBSt("platform_market_prices2")
