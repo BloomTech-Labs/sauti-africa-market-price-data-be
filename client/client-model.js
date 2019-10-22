@@ -8,7 +8,7 @@ module.exports = {
 // Flexible by allowing user to select whichever query they want.
 
 function getSautiDataClient(query) {
-  let queryOperation = DBSt("platform_market_prices")
+  let queryOperation = DBSt("platform_market_prices2")
   const { sortby = "udate", sortdir = "desc", limit = 50 } = query
 
   // If user wants data from specific country/countries
