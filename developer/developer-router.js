@@ -1,5 +1,5 @@
 const express = require("express")
-
+const validate = require("../middleware/validate.js")
 const Developer = require("./developer-model.js")
 const router = express.Router()
 
@@ -16,10 +16,15 @@ router.get("/", (req, res) => {
 })
 
 //getting the latest market price for a product across all markets
-router.get("/latest", (req, res) => {
+router.get("/latest", validate.queryProduct, (req, res) => {
   Developer.latestPriceAcrossAllMarkets(req.query)
     .then(records => {
-      res.status(200).json(records[0])
+      if(!records[0] || records[0].length < 1){
+        res.status(404).json({message:"The product entered doesn't exist in the database, please check the list of available products"})
+      } 
+      else{
+        res.status(200).json(records[0])
+      }
     })
     .catch(error => {
       console.log(error)
