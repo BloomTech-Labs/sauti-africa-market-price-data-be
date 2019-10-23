@@ -8,12 +8,10 @@ router.get("/filter", validate.queryCountPage, (req, res) => {
   Developer.getSautiData(req.query)
     .then(records => {
       if (!records || records.length < 1) {
-        res
-          .status(404)
-          .json({
-            message:
-              "Records don't exist here, change the query parameters or change page no. "
-          })
+        res.status(404).json({
+          message:
+            "Records don't exist here, change the query parameters or change page no. "
+        })
       } else {
         res.status(200).json({ message: req.message, records: records })
       }
@@ -93,7 +91,6 @@ router.get(
         res.status(200).json({ message: req.message, records: records })
       })
       .catch(error => {
-        console.log(error)
         res.status(500).send(error.message)
       })
   }
