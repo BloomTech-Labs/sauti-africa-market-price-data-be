@@ -8,7 +8,12 @@ router.get("/filter", validate.queryCountPage, (req, res) => {
   Developer.getSautiData(req.query)
     .then(records => {
       if (!records || records.length < 1) {
-        res.status(404).json({ message: "the thing you put is like not there" })
+        res
+          .status(404)
+          .json({
+            message:
+              "Records don't exist here, change the query parameters or change page no. "
+          })
       } else {
         res.status(200).json({ message: req.message, records: records })
       }
