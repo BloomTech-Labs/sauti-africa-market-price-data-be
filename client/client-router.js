@@ -1,9 +1,9 @@
-const express = require("express")
+const express = require('express')
 
-const Client = require("./client-model.js")
+const Client = require('./client-model.js')
 const router = express.Router()
 
-router.get("/", (req, res) => {
+router.get('/', (req, res) => {
   Client.getSautiDataClient(req.query)
     .then(records => {
       res.status(200).json(records)

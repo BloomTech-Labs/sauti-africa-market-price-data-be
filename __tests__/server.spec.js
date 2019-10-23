@@ -1,9 +1,9 @@
-const request = require("supertest")
-const app = require("../api/server")
+const request = require('supertest')
+const app = require('../api/server')
 
-describe("server", () => {
-  it("returns 200", async () => {
-    const res = await request(app).get("/")
+describe('server', () => {
+  it('returns 200', async () => {
+    const res = await request(app).get('/')
 
     expect(res.status).toEqual(200)
   })
@@ -11,9 +11,9 @@ describe("server", () => {
 
 /*=== tests for api key flow ===*/
 
-describe("API Key Authentication", () => {
-  it("/sauti route should be forbidden without key", async () => {
-    const res = await request(app).get("/sauti")
+describe('API Key Authentication', () => {
+  it('/sauti route should be forbidden without key', async () => {
+    const res = await request(app).get('/sauti')
     expect(res.status).toEqual(403)
   })
 

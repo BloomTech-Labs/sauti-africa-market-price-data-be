@@ -33,16 +33,17 @@ To get the server running locally:
 🚫This is a placeholder, replace the endpoints, access controll, and descriptioin to match your project
 
 #### Developer Routes
+
 - Access Control: Access of these endpoints given to developers through API keys.
 - All endpoints make use of query strings
 
-| Method | Example Endpoint                                                    | Description                                   |
-| ------ | ----------------------------------------------------------- | --------------------------------------------- |
-| GET    | `/sauti/developer/latestmarket/?market=mombasa&product=yellow%20beans` |  return the latest price of a particular product from a particular market            |
-| GET    | `/sauti/developer/lists/?list=market` | returns a list of a either markets, countries, products, or sources                      |
-| GET    | `/sauti/developer/products/range/?product=yellow%20beans&startDate=07-01-2019&endDate=08-01-2019` | returns price information on a particular product across a date range                      |
-| GET    | `/sauti/developer/?c=uga&c=tza&market=mombasa&market=Masindi&pcat=beans&pagg=beans&p=beans&p=yellow%20beans&count=2&page=2` |  filters data with countries, markets, sub levels of products, and can set up pagination with count and page    |
-| GET    | `/sauti/developer/latest/?product=yellow%20beans` |  returns the latest price of a particular product across all markets                     |
+| Method | Example Endpoint                                                                                                            | Description                                                                                                 |
+| ------ | --------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| GET    | `/sauti/developer/latestmarket/?market=mombasa&product=yellow%20beans`                                                      | return the latest price of a particular product from a particular market                                    |
+| GET    | `/sauti/developer/lists/?list=market`                                                                                       | returns a list of a either markets, countries, products, or sources                                         |
+| GET    | `/sauti/developer/products/range/?product=yellow%20beans&startDate=07-01-2019&endDate=08-01-2019`                           | returns price information on a particular product across a date range                                       |
+| GET    | `/sauti/developer/?c=uga&c=tza&market=mombasa&market=Masindi&pcat=beans&pagg=beans&p=beans&p=yellow%20beans&count=2&page=2` | filters data with countries, markets, sub levels of products, and can set up pagination with count and page |
+| GET    | `/sauti/developer/latest/?product=yellow%20beans`                                                                           | returns the latest price of a particular product across all markets                                         |
 
 #### User Routes
 

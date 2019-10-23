@@ -1,13 +1,13 @@
 exports.up = function(knex) {
-  return knex.schema.createTable("apiKeys", tbl => {
+  return knex.schema.createTable('apiKeys', tbl => {
     tbl.increments()
     tbl
-      .text("key", 128)
+      .text('key', 128)
       .unique()
       .notNullable()
   })
 }
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists("apiKeys")
+  return knex.schema.dropTableIfExists('apiKeys')
 }
