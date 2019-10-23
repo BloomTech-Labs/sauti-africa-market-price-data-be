@@ -7,7 +7,7 @@ client.get = promisify(client.get)
 const CALL_LIMIT = 10 // change as needed
 
 module.exports = async (req, res, next) => {
-  const { key } = req
+  const { key } = req.key
 
   const calls = await client.get(key)
 
