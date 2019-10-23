@@ -13,13 +13,8 @@ module.exports = {
 // Notes: Flexible by allowing user to select whichever query they want.
 
 function getSautiData(query) {
-  let queryOperation = DBSt('platform_market_prices2')
-  let {
-    sortby = 'date', //here
-    sortdir = 'desc',
-    count,
-    page
-  } = query
+  let queryOperation = DBSt("platform_market_prices2")
+  let { count, page } = query
 
   if (count) {
     count = parseInt(count)
@@ -85,8 +80,8 @@ function getSautiData(query) {
       'date',
       'udate'
     )
-    .orderBy(sortby, sortdir)
-    .where('active', (query.a = 1))
+    .orderBy("date", "desc")
+    .where("active", (query.a = 1))
     .limit(count)
     .offset(page)
 }
@@ -131,8 +126,10 @@ function latestPriceByMarket(query) {
 }
 
 function getListsOfThings(query, selector) {
-  let queryOperation = DBSt('platform_market_prices2')
-
+  let queryOperation = DBSt("platform_market_prices2")
+  if (query === undefined) {
+    query = "market"
+  }
   switch (query.toLowerCase()) {
     case 'market':
       return queryOperation.distinct('market').orderBy('market')
@@ -143,7 +140,7 @@ function getListsOfThings(query, selector) {
     case 'product':
       return queryOperation.distinct('product').orderBy('product')
     default:
-      return queryOperation.limit(10)
+      return queryOperation.distinct("market").orderBy("market")
   }
 }
 
@@ -165,11 +162,24 @@ function getAllRecords(count, page) {
     .offset(page)
 }
 
-function getProductPriceRange(product, startDate, endDate) {
-  return DBSt('platform_market_prices2')
-    .select('*')
-    .where('product', product)
-    .andWhereBetween('date', [startDate, endDate])
+function getProductPriceRange(product, startDate, endDate, count, page) {
+  if (count) {
+    count = parseInt(count)
+  } else {
+    count = 20
+  }
+  if (page) {
+    page = (parseInt(page) - 1) * count
+  } else {
+    page = 0
+  }
+
+  return DBSt("platform_market_prices2")
+    .select("*")
+    .where("product", product)
+    .andWhereBetween("date", [startDate, endDate])
+    .limit(count)
+    .offset(page)
 }
 
 // function kathrynAttempt(query){
