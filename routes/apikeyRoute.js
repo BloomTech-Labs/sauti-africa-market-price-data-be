@@ -1,19 +1,18 @@
-const express = require("express");
-const router = express.Router();
-const jwt = require("express-jwt");
-const jwks = require("jwks-rsa");
-const jwtDecode = require("jwt-decode");
-const uuidAPIKey = require("uuid-apikey");
+const express = require('express')
+const router = express.Router()
+const jwt = require('express-jwt')
+const jwks = require('jwks-rsa')
+const uuidAPIKey = require('uuid-apikey')
 
-const db = require("../api-key/dbConfig");
+const db = require('../api-key/dbConfig')
 
 const jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
-    jwksRequestsPerMinute: 5,
+    jwksRequestsPerMinute: 10,
     jwksUri:
-      "https://sauti-africa-market-prices.auth0.com/.well-known/jwks.json"
+      'https://sauti-africa-market-prices.auth0.com/.well-known/jwks.json'
   }),
   audience: "https://sauti-africa-market-prices.auth0.com/api/v2/",
   issuer: "https://sauti-africa-market-prices.auth0.com/",
