@@ -17,7 +17,7 @@ server.use(express.json())
 
 server.use('/api/apikeyRoute', apikeyRoute)
 
-server.use('/sauti/developer', devRouter)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
 server.use('/sauti/client', clientRouter)
 
 server.get('/', (req, res) => {
@@ -30,7 +30,7 @@ function getThings() {
     .limit(10)
 }
 
-server.get('/sauti', apiAuthenticator, apiLimiter, (req, res) => {
+server.get('/sauti', apiAuthenticator, apiLimiter, (_req, res) => {
   getThings()
     .then(records => {
       res.status(200).json(records)
