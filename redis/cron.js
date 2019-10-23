@@ -1,3 +1,3 @@
-const clent = require('.')
+const client = require('.')
 
 client.FLUSHALL()
