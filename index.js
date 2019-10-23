@@ -1,9 +1,9 @@
-require("dotenv").config()
+require('dotenv').config()
 
-const server = require("./api/server")
+const server = require('./api/server')
 
 //Initialize Moesif and set up the middleware
-const moesifExpress = require("moesif-express")
+const moesifExpress = require('moesif-express')
 const moesifMiddleware = moesifExpress({
   applicationId: process.env.MOESIF_ID || undefined,
   logBody: true
