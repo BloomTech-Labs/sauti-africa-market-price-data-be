@@ -5,6 +5,10 @@ exports.up = function(knex) {
       .text("key", 128)
       .unique()
       .notNullable()
+    tbl
+      .text("user_id")
+      .unique()
+      .notNullable()
   })
 }
 
