@@ -20,7 +20,7 @@ module.exports = {
   testing: {
     client: 'sqlite3',
     connection: {
-      filename: './api-key/apiKey.db3'
+      filename: './api-key/apiKey-tests.db3'
     },
     pool: {
       afterCreate: (conn, done) => {
