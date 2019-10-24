@@ -26,10 +26,7 @@ server.use(express.json())
 
 server.use('/api/apikeyRoute', apikeyRoute)
 
-server.use(
-  '/sauti/developer',
-  /*Insert commented code before commit*/ devRouter
-)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
 server.use('/sauti/client', clientRouter)
 
 server.get('/', (req, res) => {
@@ -41,19 +38,16 @@ function getThings() {
     .orderBy('date')
     .limit(10)
 }
-// apiAuthenticator, apiLimiter
-server.get(
-  '/sauti',
-  /*Insert commented code before commit*/ (_req, res) => {
-    getThings()
-      .then(records => {
-        res.status(200).json(records)
-      })
-      .catch(error => {
-        console.log(error)
-        res.status(500).send(error.message)
-      })
-  }
-)
+
+server.get('/sauti', apiAuthenticator, apiLimiter, (_req, res) => {
+  getThings()
+    .then(records => {
+      res.status(200).json(records)
+    })
+    .catch(error => {
+      console.log(error)
+      res.status(500).send(error.message)
+    })
+})
 
 module.exports = server
