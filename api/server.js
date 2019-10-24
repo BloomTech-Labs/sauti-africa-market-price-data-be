@@ -25,7 +25,7 @@ server.get('/', (req, res) => {
 })
 
 function getThings() {
-  return DBSt('platform_market_prices')
+  return DBSt('platform_market_prices2')
     .orderBy('date')
     .limit(10)
 }
