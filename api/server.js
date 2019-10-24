@@ -10,6 +10,15 @@ const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
 
 const server = express()
+//Initialize Moesif and set up the middleware
+const moesifExpress = require('moesif-express')
+const moesifMiddleware = moesifExpress({
+  applicationId: process.env.MOESIF_ID || undefined,
+  logBody: true
+})
+
+//Server uses middleware to add functionality
+server.use(moesifMiddleware)
 
 server.use(helmet())
 server.use(cors())
@@ -17,7 +26,10 @@ server.use(express.json())
 
 server.use('/api/apikeyRoute', apikeyRoute)
 
-server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
+server.use(
+  '/sauti/developer',
+  /*Insert commented code before commit*/ devRouter
+)
 server.use('/sauti/client', clientRouter)
 
 server.get('/', (req, res) => {
@@ -29,16 +41,19 @@ function getThings() {
     .orderBy('date')
     .limit(10)
 }
-
-server.get('/sauti', apiAuthenticator, apiLimiter, (_req, res) => {
-  getThings()
-    .then(records => {
-      res.status(200).json(records)
-    })
-    .catch(error => {
-      console.log(error)
-      res.status(500).send(error.message)
-    })
-})
+// apiAuthenticator, apiLimiter
+server.get(
+  '/sauti',
+  /*Insert commented code before commit*/ (_req, res) => {
+    getThings()
+      .then(records => {
+        res.status(200).json(records)
+      })
+      .catch(error => {
+        console.log(error)
+        res.status(500).send(error.message)
+      })
+  }
+)
 
 module.exports = server
