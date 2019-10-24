@@ -3,11 +3,17 @@ language: node_js
 node_js:
   - node
 
+services:
+  - sqlite3
+
 addons:
   apt:
+    sources:
+      - travis-ci/sqlite3
     packages:
       # Ubuntu 16+ does not install this dependency by default, so we need to install it ourselves
       - libgconf-2-4
+      - sqlite3
 
 cache:
   directories:
