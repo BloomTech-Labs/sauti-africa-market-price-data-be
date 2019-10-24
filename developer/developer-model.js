@@ -13,7 +13,7 @@ module.exports = {
 // Notes: Flexible by allowing user to select whichever query they want.
 
 function getSautiData(query) {
-  let queryOperation = DBSt("platform_market_prices2")
+  let queryOperation = DBSt('platform_market_prices2')
   let { count, page } = query
 
   if (count) {
@@ -80,8 +80,8 @@ function getSautiData(query) {
       'date',
       'udate'
     )
-    .orderBy("date", "desc")
-    .where("active", (query.a = 1))
+    .orderBy('date', 'desc')
+    .where('active', (query.a = 1))
     .limit(count)
     .offset(page)
 }
@@ -126,9 +126,9 @@ function latestPriceByMarket(query) {
 }
 
 function getListsOfThings(query, selector) {
-  let queryOperation = DBSt("platform_market_prices2")
+  let queryOperation = DBSt('platform_market_prices2')
   if (query === undefined) {
-    query = "market"
+    query = 'market'
   }
   switch (query.toLowerCase()) {
     case 'market':
@@ -140,7 +140,7 @@ function getListsOfThings(query, selector) {
     case 'product':
       return queryOperation.distinct('product').orderBy('product')
     default:
-      return queryOperation.distinct("market").orderBy("market")
+      return queryOperation.distinct('market').orderBy('market')
   }
 }
 
@@ -174,10 +174,10 @@ function getProductPriceRange(product, startDate, endDate, count, page) {
     page = 0
   }
 
-  return DBSt("platform_market_prices2")
-    .select("*")
-    .where("product", product)
-    .andWhereBetween("date", [startDate, endDate])
+  return DBSt('platform_market_prices2')
+    .select('*')
+    .where('product', product)
+    .andWhereBetween('date', [startDate, endDate])
     .limit(count)
     .offset(page)
 }

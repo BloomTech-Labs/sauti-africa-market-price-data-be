@@ -17,7 +17,7 @@ function queryProduct(req, res, next) {
 
 function queryCountPage(req, res, next) {
   if (req.query.count > 500) {
-    req.message = "Each page can have maximum of 500 records"
+    req.message = 'Each page can have maximum of 500 records'
     req.query.count = 500
     next()
   } else {
@@ -45,11 +45,9 @@ function queryProductDate(req, res, next) {
       .status(400)
       .json({ errorMessage: "Please supply the query parameter of 'product' " })
   } else if (req.query.startDate === undefined) {
-    res
-      .status(400)
-      .json({
-        errorMessage: "Please supply the query parameter of 'startDate' "
-      })
+    res.status(400).json({
+      errorMessage: "Please supply the query parameter of 'startDate' "
+    })
   } else if (req.query.endDate === undefined) {
     res
       .status(400)
