@@ -17,10 +17,10 @@ module.exports = {
   },
 
   /*=== testing ===*/
-  testing: {
+  test: {
     client: 'sqlite3',
     connection: {
-      filename: './api-key/apiKey.db3'
+      filename: './api-key/apiKey-testing.db3'
     },
     pool: {
       afterCreate: (conn, done) => {
