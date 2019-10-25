@@ -28,25 +28,25 @@ router.post('/private', jwtCheck, async (req, res) => {
     .where({ user_id: id })
     .first()
 
-  bcrypt.hash(key.apiKey, 10, async function(err, hash) {
-    if (hash) {
-      if (user) {
+  bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
+    if (user) {
+      try {
         await db('apiKeys')
           .where({ user_id: id })
           .update({ key: hash })
+
         res.status(200).json({ existed: true, key: key.apiKey })
-      } else {
-        try {
-          console.log('no user')
-          await db('apiKeys').insert({ key: hash, user_id: id })
-          res.status(200).json({ existed: false, key: key.apiKey })
-        } catch (err) {
-          console.log(err)
-        }
+      } catch (err) {
+        console.log(err)
       }
-    }
-    if (err) {
-      res.status(500).json({ message: 'Key could not be hashed' })
+    } else {
+      try {
+        await db('apiKeys').insert({ key: hash, user_id: id })
+
+        res.status(200).json({ existed: false, key: key.apiKey })
+      } catch (err) {
+        console.log(err)
+      }
     }
   })
 })
