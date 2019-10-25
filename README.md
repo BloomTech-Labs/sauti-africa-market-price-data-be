@@ -1,6 +1,6 @@
 # API Documentation
 
-#### 1️⃣ Backend delpoyed at [heroku](https://sauti-africa-market-master.herokuapp.com/) <br> <br> View the API Docs & Examples at [Postman](https://documenter.getpostman.com/view/8666055/SVtZvkxB?version=latest#379d2949-1e20-47be-9f13-9d142581a8c9)
+#### 1️⃣ Backend deployed at [heroku](https://sauti-africa-market-master.herokuapp.com/) <br> <br> View the API Docs & Examples at [Postman](https://documenter.getpostman.com/view/8666055/SVtZvkxB?version=latest#379d2949-1e20-47be-9f13-9d142581a8c9)
 
 ## 1️⃣ Getting started
 
