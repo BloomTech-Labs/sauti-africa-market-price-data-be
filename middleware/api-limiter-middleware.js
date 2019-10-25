@@ -4,7 +4,7 @@ const client = require('../redis')
 
 client.get = promisify(client.get)
 
-const CALL_LIMIT = 100 // change as needed
+const CALL_LIMIT = 20 // change as needed
 
 module.exports = async (req, res, next) => {
   const { key } = req
