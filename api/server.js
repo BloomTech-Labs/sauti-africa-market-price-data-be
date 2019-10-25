@@ -29,7 +29,7 @@ server.get('/', (req, res) => {
 function getThings() {
   return DBSt('platform_market_prices2')
     .orderBy('date')
-    .limit(10)
+    .limit(1)
 }
 
 server.get('/sauti', apiAuthenticator, apiLimiter, (_req, res) => {
