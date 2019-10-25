@@ -6,7 +6,7 @@ exports.up = function(knex) {
       .unique()
       .notNullable()
     tbl
-      .text("user_id")
+      .text('user_id')
       .unique()
       .notNullable()
   })

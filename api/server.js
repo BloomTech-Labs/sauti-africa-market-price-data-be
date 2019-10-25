@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
+const compression = require('compression')
 
 const DBSt = require('../database/dbSTConfig')
 const apikeyRoute = require('../routes/apikeyRoute')
@@ -11,6 +12,7 @@ const clientRouter = require('../client/client-router.js')
 
 const server = express()
 
+server.use(compression())
 server.use(helmet())
 server.use(cors())
 server.use(express.json())
