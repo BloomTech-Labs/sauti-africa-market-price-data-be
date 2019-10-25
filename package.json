@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon index.js",
-    "test": "cross-env DB_ENV=testing jest --coverage --detectOpenHandles --forceExit",
-    "start": "node index.js",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
+    "start": "pm2-runtime index.js -i max",
     "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
   },
   "repository": {

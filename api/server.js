@@ -12,10 +12,10 @@ const clientRouter = require('../client/client-router.js')
 
 const server = express()
 
+server.use(compression())
 server.use(helmet())
 server.use(cors())
 server.use(express.json())
-server.use(compression())
 
 server.use('/api/apikeyRoute', apikeyRoute)
 
