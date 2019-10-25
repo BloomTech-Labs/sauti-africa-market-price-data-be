@@ -3,23 +3,34 @@ const bcrypt = require('bcryptjs')
 
 module.exports = async (req, res, next) => {
   const { key } = req.headers
+
   let validKey = null
+
+  const keyCandidates = await db('apiKeys')
 
   /*=== checks validity of key ===*/
   if (key) {
-    const users = await db('apiKeys')
+    try {
+      for (candidate of keyCandidates) {
+        const k = await bcrypt.compare(key, candidate.key)
 
-    for (let i = 0; i < users.length; i++) {
-      bcrypt.compare(key, users[i].key, function(err, res) {
-        if (res === true) {
-          req.key = key
-          next()
+        if (k) {
+          validKey = key
+          break
         }
-      })
+      }
+    } catch (err) {
+      console.log(err)
     }
+  }
+
+  /*=== sends key on req object to apiLim middleware ===*/
+  if (validKey) {
+    req.key = validKey
+    next()
   } else {
-    res
-      .status(403)
-      .json({ error: 'Valid key not provided. Access denied', key: key })
+    res.status(403).json({
+      error: 'Valid key not provided. Access denied.'
+    })
   }
 }
