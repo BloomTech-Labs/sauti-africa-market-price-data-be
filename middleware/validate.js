@@ -2,7 +2,8 @@ module.exports = {
   queryProduct,
   queryProductMarket,
   queryProductDate,
-  queryCountPage
+  queryCountPage,
+  queryCurrency
 }
 
 function queryProduct(req, res, next) {
@@ -53,6 +54,32 @@ function queryProductDate(req, res, next) {
       .status(400)
       .json({ errorMessage: "Please supply the query parameter of 'endDate' " })
   } else {
+    next()
+  }
+}
+
+function queryCurrency(req, res, next) {
+  const supportedCurrencies = [
+    'MWK',
+    'RWF',
+    'KES',
+    'UGX',
+    'TZS',
+    'CDF',
+    'BIF',
+    'USD'
+  ]
+  const { currency } = req.query
+
+  if (!supportedCurrencies.includes(currency.toUpperCase())) {
+    res.status(400).json({
+      errorMessage: `Parameter 'currency' must be one of:  ${supportedCurrencies}`
+    })
+  } else if (currency === undefined) {
+    req.currency = 'USD'
+    next()
+  } else {
+    req.currency = currency.toUpperCase()
     next()
   }
 }
