@@ -48,7 +48,13 @@ router.get(
               "The product entered doesn't exist in the database, please check the list of available products"
           })
         } else {
-          res.status(200).json(records[0])
+          convertCurrencies(records[0], req.currency)
+            .then(converted => {
+              res.status(200).json(converted)
+            })
+            .catch(error => {
+              console.log(error)
+            })
         }
       })
       .catch(error => {
@@ -68,7 +74,13 @@ router.get(
     Developer.latestPriceByMarket(req.query)
       .then(records => {
         if (records) {
-          res.status(200).json(records)
+          convertCurrencies(records, req.currency)
+            .then(converted => {
+              res.status(200).json(converted)
+            })
+            .catch(error => {
+              console.log(error)
+            })
         } else {
           res.status(404).json({
             message:
@@ -107,7 +119,13 @@ router.get(
     const { product, startDate, endDate, page, count } = req.query
     Developer.getProductPriceRange(product, startDate, endDate, count, page)
       .then(records => {
-        res.status(200).json({ message: req.message, records: records })
+        convertCurrencies(records, req.currency)
+          .then(converted => {
+            res.status(200).json({ message: req.message, records: converted })
+          })
+          .catch(error => {
+            console.log(error)
+          })
       })
       .catch(error => {
         res.status(500).send(error.message)

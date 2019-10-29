@@ -71,13 +71,13 @@ function queryCurrency(req, res, next) {
   ]
   const { currency } = req.query
 
-  if (!supportedCurrencies.includes(currency.toUpperCase())) {
+  if (currency === undefined) {
+    req.currency = 'USD'
+    next()
+  } else if (!supportedCurrencies.includes(currency.toUpperCase())) {
     res.status(400).json({
       errorMessage: `Parameter 'currency' must be one of:  ${supportedCurrencies}`
     })
-  } else if (currency === undefined) {
-    req.currency = 'USD'
-    next()
   } else {
     req.currency = currency.toUpperCase()
     next()
