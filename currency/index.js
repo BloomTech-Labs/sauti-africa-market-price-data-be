@@ -43,7 +43,7 @@ const getExchangeRates = async () => {
   } else {
     return await axios
       .get(
-        'http://sautiadfrica.org/endpoints/api.php?url=v1/exchangeRates/&type=json'
+        'http://sautiafrica.org/endpoints/api.php?url=v1/exchangeRates/&type=json'
       )
       .then(res => {
         res.data.updated = new Date().toUTCString()
