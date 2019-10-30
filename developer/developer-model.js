@@ -122,7 +122,7 @@ function latestPriceByMarket(query) {
     .where('product', `${product}`)
     .andWhere('market', `${market}`)
     .orderBy('date', 'desc')
-    .first()
+    .limit(1)
 }
 
 function getListsOfThings(query, selector) {
