@@ -68,42 +68,25 @@ const convertCurrency = (source, target, value, exchangeRates) => {
 module.exports = async (data, targetCurrency) => {
   return await getExchangeRates()
     .then(rates => {
-      if (Array.isArray(data)) {
-        return {
-          ratesUpdated: rates.updated,
-          data: data.map(row => {
-            row.wholesale = convertCurrency(
-              row.currency,
-              targetCurrency,
-              row.wholesale,
-              rates
-            )
-            row.retail = convertCurrency(
-              row.currency,
-              targetCurrency,
-              row.retail,
-              rates
-            )
-            row.currency = targetCurrency
-            return row
-          })
-        }
-      } else {
-        let row = data
-        row.wholesale = convertCurrency(
-          row.currency,
-          targetCurrency,
-          row.wholesale,
-          rates
-        )
-        row.retail = convertCurrency(
-          row.currency,
-          targetCurrency,
-          row.retail,
-          rates
-        )
-        row.currency = targetCurrency
-        return { ratesUpdated: rates.updated, data: row }
+      // if (Array.isArray(data)) {
+      return {
+        ratesUpdated: rates.updated,
+        data: data.map(row => {
+          row.wholesale = convertCurrency(
+            row.currency,
+            targetCurrency,
+            row.wholesale,
+            rates
+          )
+          row.retail = convertCurrency(
+            row.currency,
+            targetCurrency,
+            row.retail,
+            rates
+          )
+          row.currency = targetCurrency
+          return row
+        })
       }
     })
     .catch(error => {
