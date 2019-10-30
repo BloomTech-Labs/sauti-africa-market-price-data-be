@@ -36,7 +36,7 @@ const getExchangeRates = async () => {
     updated: 'Tue, 29 Oct 2019 13:51:22 GMT'
   }
 
-  const recent = await client.get('recentExchangeRates')
+  const recent = await client.get('recentExchangeRates') // Check redis cache for recent exchange rate data
 
   if (recent) {
     return JSON.parse(recent)
@@ -46,12 +46,13 @@ const getExchangeRates = async () => {
         'http://sautiafrica.org/endpoints/api.php?url=v1/exchangeRates/&type=json'
       )
       .then(res => {
-        res.data.updated = new Date().toUTCString()
+        res.data.updated = new Date().toUTCString() // Store time we pulled from the API
         client.set('recentExchangeRates', JSON.stringify(res.data), 'EX', 600) // cache for 10 minutes
         client.set('lastKnownExchangeRates', JSON.stringify(res.data)) // cache indefinitely as fallback in case API goes down and recentExchangeRates has expired
         return res.data
       })
       .catch(async error => {
+        // If API call fails and there is no fresh result in cache, return last successfull pull from the API if found, otherwise return default rates
         const lastKnown = await client.get('lastKnownExchangeRates')
         return lastKnown ? JSON.parse(lastKnown) : defaultRates
       })
