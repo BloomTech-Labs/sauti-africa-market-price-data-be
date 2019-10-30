@@ -69,6 +69,7 @@ module.exports = async (data, targetCurrency) => {
     .then(rates => {
       if (Array.isArray(data)) {
         return {
+          ratesUpdated: rates.updated,
           data: data.map(row => {
             row.wholesale = convertCurrency(
               row.currency,
@@ -101,7 +102,7 @@ module.exports = async (data, targetCurrency) => {
           rates
         )
         row.currency = targetCurrency
-        return { data: row }
+        return { ratesUpdated: rates.updated, data: row }
       }
     })
     .catch(error => {

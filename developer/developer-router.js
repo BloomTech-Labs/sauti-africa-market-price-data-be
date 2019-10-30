@@ -23,7 +23,8 @@ router.get(
               res.status(200).json({
                 warning: converted.warning,
                 message: req.message,
-                records: converted.data
+                records: converted.data,
+                ratesUpdated: converted.ratesUpdated
               })
             })
             .catch(error => {
@@ -57,7 +58,8 @@ router.get(
               res.status(200).json({
                 warning: converted.warning,
                 message: req.message,
-                records: converted.data
+                records: converted.data,
+                ratesUpdated: converted.ratesUpdated
               })
             })
             .catch(error => {
@@ -87,7 +89,8 @@ router.get(
               res.status(200).json({
                 warning: converted.warning,
                 message: req.message,
-                record: converted.data
+                record: converted.data,
+                ratesUpdated: converted.ratesUpdated
               })
             })
             .catch(error => {
@@ -136,7 +139,8 @@ router.get(
             res.status(200).json({
               warning: converted.warning,
               message: req.message,
-              records: converted.data
+              records: converted.data,
+              ratesUpdated: converted.ratesUpdated
             })
           })
           .catch(error => {
