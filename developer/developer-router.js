@@ -20,7 +20,11 @@ router.get(
         } else {
           convertCurrencies(records, req.currency)
             .then(converted => {
-              res.status(200).json({ message: req.message, records: converted })
+              res.status(200).json({
+                warning: converted.warning,
+                message: req.message,
+                records: converted.data
+              })
             })
             .catch(error => {
               console.log(error)
@@ -50,7 +54,11 @@ router.get(
         } else {
           convertCurrencies(records[0], req.currency)
             .then(converted => {
-              res.status(200).json(converted)
+              res.status(200).json({
+                warning: converted.warning,
+                message: req.message,
+                records: converted.data
+              })
             })
             .catch(error => {
               console.log(error)
@@ -72,11 +80,15 @@ router.get(
   validate.queryProductMarket,
   (req, res) => {
     Developer.latestPriceByMarket(req.query)
-      .then(records => {
-        if (records) {
-          convertCurrencies(records, req.currency)
+      .then(record => {
+        if (record) {
+          convertCurrencies(record, req.currency)
             .then(converted => {
-              res.status(200).json(converted)
+              res.status(200).json({
+                warning: converted.warning,
+                message: req.message,
+                record: converted.data
+              })
             })
             .catch(error => {
               console.log(error)
@@ -121,7 +133,11 @@ router.get(
       .then(records => {
         convertCurrencies(records, req.currency)
           .then(converted => {
-            res.status(200).json({ message: req.message, records: converted })
+            res.status(200).json({
+              warning: converted.warning,
+              message: req.message,
+              records: converted.data
+            })
           })
           .catch(error => {
             console.log(error)
