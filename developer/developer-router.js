@@ -89,7 +89,7 @@ router.get(
               res.status(200).json({
                 warning: converted.warning,
                 message: req.message,
-                records: converted.data,
+                record: converted.data,
                 ratesUpdated: converted.ratesUpdated
               })
             })
