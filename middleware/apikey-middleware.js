@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
   if (key) {
     try {
       validKey = await db("apiKeys")
-        .where({ key: db.raw("digest(key, 'md5')") })
+        .where({ key: db.raw("digest(?, 'md5')", [key]) })
         .first();
       // for (candidate of keyCandidates) {
       //   const k = await bcrypt.compare(key, candidate.key)
