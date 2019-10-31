@@ -34,7 +34,7 @@ router.post("/private", jwtCheck, async (req, res) => {
     try {
       await db("apiKeys")
         .where({ user_id: id })
-        .update({ key: db.raw("digest(key.apiKey, 'md5')") });
+        .update({ key: db.raw("digest(?, 'md5')", [key.apiKey]) });
 
       res.status(200).json({ existed: true, key: key.apiKey });
     } catch (err) {
@@ -42,10 +42,13 @@ router.post("/private", jwtCheck, async (req, res) => {
     }
   } else {
     try {
-      await db("apiKeys").insert({
-        key: db.raw("digest(key.apiKey, 'md5')"),
-        user_id: id
-      });
+      await db("apiKeys")
+        .raw()
+
+        .insert({
+          key: db.raw("digest(?, 'md5')", [key.apiKey]),
+          user_id: id
+        });
 
       res.status(200).json({ existed: false, key: key.apiKey });
     } catch (err) {
