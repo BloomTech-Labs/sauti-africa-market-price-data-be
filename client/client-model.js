@@ -1,7 +1,8 @@
 const DBSt = require('../database/dbSTConfig')
 
 module.exports = {
-  getSautiDataClient
+  getSautiDataClient,
+  getListsOfThings
 }
 
 // Helper function with filter searches for client side
@@ -80,6 +81,26 @@ function getSautiDataClient(query) {
     .limit(count)
     .offset(page)
 }
+
+function getListsOfThings(query, selector) {
+  let queryOperation = DBSt('platform_market_prices2')
+  if (query === undefined) {
+    query = 'market'
+  }
+  switch (query.toLowerCase()) {
+    case 'market':
+      return queryOperation.distinct('market').orderBy('market')
+    case 'country':
+      return queryOperation.distinct('country').orderBy('country')
+    case 'source':
+      return queryOperation.distinct('source').orderBy('source')
+    case 'product':
+      return queryOperation.distinct('product').orderBy('product')
+    default:
+      return queryOperation.distinct('market').orderBy('market')
+  }
+}
+
 //   let queryOperation = DBSt('platform_market_prices2')
 //   const { sortby = 'udate', sortdir = 'desc', limit = 50 } = query
 
