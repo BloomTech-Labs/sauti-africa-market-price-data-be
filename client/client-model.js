@@ -31,10 +31,10 @@ function getSautiDataClient(query) {
   }
 
   // If user wants data from specific markets
-  if (query.market && !Array.isArray(query.market)) {
-    queryOperation = queryOperation.whereIn('market', [query.market])
-  } else if (query.market && Array.isArray(query.market)) {
-    queryOperation = queryOperation.whereIn('market', query.market)
+  if (query.m && !Array.isArray(query.m)) {
+    queryOperation = queryOperation.whereIn('market', [query.m])
+  } else if (query.m && Array.isArray(query.m)) {
+    queryOperation = queryOperation.whereIn('market', query.m)
   }
 
   //if user wants data from spcific product categories
@@ -61,25 +61,28 @@ function getSautiDataClient(query) {
     queryOperation = queryOperation.whereIn('product', query.p)
   }
 
-  return queryOperation
-    .select(
-      'country',
-      'market',
-      'source',
-      'product_cat',
-      'product_agg',
-      'product',
-      'retail',
-      'wholesale',
-      'currency',
-      'unit',
-      'date',
-      'udate'
-    )
-    .orderBy('date', 'desc')
-    .where('active', (query.a = 1))
-    .limit(count)
-    .offset(page)
+  return (
+    queryOperation
+      .select(
+        'country',
+        'market',
+        'source',
+        'product_cat',
+        'product_agg',
+        'product',
+        'retail',
+        'wholesale',
+        'currency',
+        'unit',
+        'date',
+        'udate'
+      )
+      .orderBy('date', 'desc')
+      .where('active', (query.a = 1))
+      // .andWhereBetween('date', [startDate, endDate])
+      .limit(count)
+      .offset(page)
+  )
 }
 
 function getListsOfThings(query, selector) {
@@ -96,9 +99,21 @@ function getListsOfThings(query, selector) {
       return queryOperation.distinct('source').orderBy('source')
     case 'product':
       return queryOperation.distinct('product').orderBy('product')
+    case 'category':
+      return queryOperation.distinct('product_cat').orderBy('product_cat')
+    case 'aggregator':
+      return queryOperation.distinct('product_agg').orderBy('product_agg')
     default:
       return queryOperation.distinct('market').orderBy('market')
   }
+}
+function dateRange() {
+  return DBSt('platform_market_prices2')
+    .select('*')
+    .where('product', product)
+    .andWhereBetween('date', [startDate, endDate])
+    .limit(count)
+    .offset(page)
 }
 
 //   let queryOperation = DBSt('platform_market_prices2')

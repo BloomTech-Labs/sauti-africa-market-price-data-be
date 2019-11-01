@@ -30,7 +30,7 @@ router.get('/', queryCurrency, tokenMiddleware, (req, res) => {
 })
 
 router.get('/lists', (req, res) => {
-  Developer.getListsOfThings(req.query.list)
+  Client.getListsOfThings(req.query.list)
     .then(records => {
       res.status(200).json(records)
     })
