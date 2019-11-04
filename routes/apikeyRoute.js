@@ -23,39 +23,38 @@ const jwtCheck = jwt({
 router.post("/private", jwtCheck, async (req, res) => {
   const key = uuidAPIKey.create();
   const { id } = req.body;
-  const hash = digest(key.apiKey, "md5");
 
   const user = await db("apiKeys")
     .where({ user_id: id })
     .first();
 
-  // bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
-  if (user) {
-    try {
-      await db("apiKeys")
-        .where({ user_id: id })
-        .update({ key: db.raw("digest(?, 'md5')", [key.apiKey]) });
+  bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
+    if (user) {
+      try {
+        await db("apiKeys")
+          .where({ user_id: id })
+          .update({ key: hash });
 
-      res.status(200).json({ existed: true, key: key.apiKey });
-    } catch (err) {
-      console.log(err);
+        res.status(200).json({ existed: true, key: key.apiKey });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        await db("apiKeys")
+          .raw()
+
+          .insert({
+            key: hash,
+            user_id: id
+          });
+
+        res.status(200).json({ existed: false, key: key.apiKey });
+      } catch (err) {
+        console.log(err);
+      }
     }
-  } else {
-    try {
-      await db("apiKeys")
-        .raw()
-
-        .insert({
-          key: db.raw("digest(?, 'md5')", [key.apiKey]),
-          user_id: id
-        });
-
-      res.status(200).json({ existed: false, key: key.apiKey });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  // })
+  });
 });
 
 module.exports = router;

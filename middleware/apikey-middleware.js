@@ -11,17 +11,17 @@ module.exports = async (req, res, next) => {
   /*=== checks validity of key ===*/
   if (key) {
     try {
-      validKey = await db("apiKeys")
-        .where({ key: db.raw("digest(?, 'md5')", [key]) })
-        .first();
-      // for (candidate of keyCandidates) {
-      //   const k = await bcrypt.compare(key, candidate.key)
+      // validKey = await db("apiKeys")
+      //   .where({ key: db.raw("digest(?, 'md5')", [key]) })
+      //   .first();
+      for (candidate of keyCandidates) {
+        const k = await bcrypt.compare(key, candidate.key);
 
-      //   if (k) {
-      //     validKey = key
-      //     break
-      //   }
-      // }
+        if (k) {
+          validKey = key;
+          break;
+        }
+      }
     } catch (err) {
       console.log(err);
     }
