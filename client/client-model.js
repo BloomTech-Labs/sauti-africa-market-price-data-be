@@ -2,7 +2,8 @@ const DBSt = require('../database/dbSTConfig')
 
 module.exports = {
   getSautiDataClient,
-  getListsOfThings
+  getListsOfThings,
+  mcpList
 }
 
 // Helper function with filter searches for client side
@@ -86,6 +87,30 @@ function getSautiDataClient(query) {
   queryOperation = queryOperation.limit(count).offset(page);
 
   return queryOperation;
+}
+function marketList(){
+  return DBSt('platform_market_prices2').distinct('market').orderBy('market')
+}
+function countryList(){
+  return DBSt('platform_market_prices2').distinct('country').orderBy('country')
+}
+function productList(){
+  return DBSt('platform_market_prices2').distinct('product').orderBy('product')
+}
+function mcpList(){
+  const marketQuery = marketList()
+  const countryQuery = countryList()
+  const productQuery = productList()
+  return Promise.all([marketQuery, countryQuery, productQuery])
+    .then(([markets, country, product])=> {
+      let total = {}
+       console.log(country)
+       total.countries = country;
+       total.products = product;
+       total.markets = markets;
+       return total;
+    })
+  
 }
 
 function getListsOfThings(query, selector) {

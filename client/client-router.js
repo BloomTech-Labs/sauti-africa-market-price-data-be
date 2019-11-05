@@ -39,5 +39,16 @@ router.get('/lists', (req, res) => {
       res.status(500).send(error.message)
     })
 })
+router.get('/superlist', (req, res) => {
+  Client.mcpList()
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message)
+
+  })
+})
 
 module.exports = router
