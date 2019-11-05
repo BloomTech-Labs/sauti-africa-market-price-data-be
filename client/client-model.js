@@ -10,7 +10,8 @@ module.exports = {
 
 function getSautiDataClient(query) {
   let queryOperation = DBSt('platform_market_prices2')
-  let { count, page } = query
+  let { count, page, startDate, endDate } = query;
+  console.log(startDate, endDate);
 
   if (count) {
     count = parseInt(count)
@@ -61,28 +62,30 @@ function getSautiDataClient(query) {
     queryOperation = queryOperation.whereIn('product', query.p)
   }
 
-  return (
-    queryOperation
-      .select(
-        'country',
-        'market',
-        'source',
-        'product_cat',
-        'product_agg',
-        'product',
-        'retail',
-        'wholesale',
-        'currency',
-        'unit',
-        'date',
-        'udate'
-      )
-      .orderBy('date', 'desc')
-      .where('active', (query.a = 1))
-      // .andWhereBetween('date', [startDate, endDate])
-      .limit(count)
-      .offset(page)
+  queryOperation = queryOperation
+  .select(
+    'country',
+    'market',
+    'source',
+    'product_cat',
+    'product_agg',
+    'product',
+    'retail',
+    'wholesale',
+    'currency',
+    'unit',
+    'date',
+    'udate'
   )
+  .orderBy('date', 'desc')
+  .where('active', (query.a = 1));
+
+  if (startDate && endDate) {
+    queryOperation = queryOperation.andWhereBetween('date', [startDate, endDate])
+  }
+  queryOperation = queryOperation.limit(count).offset(page);
+
+  return queryOperation;
 }
 
 function getListsOfThings(query, selector) {
