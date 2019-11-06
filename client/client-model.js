@@ -104,7 +104,6 @@ function mcpList(){
   return Promise.all([marketQuery, countryQuery, productQuery])
     .then(([markets, country, product])=> {
       let total = {}
-       console.log(country)
        total.countries = country;
        total.products = product;
        total.markets = markets;
@@ -135,14 +134,15 @@ function getListsOfThings(query, selector) {
       return queryOperation.distinct('market').orderBy('market')
   }
 }
-function dateRange() {
-  return DBSt('platform_market_prices2')
-    .select('*')
-    .where('product', product)
-    .andWhereBetween('date', [startDate, endDate])
-    .limit(count)
-    .offset(page)
-}
+
+// function dateRange() {
+//   return DBSt('platform_market_prices2')
+//     .select('*')
+//     .where('product', product)
+//     .andWhereBetween('date', [startDate, endDate])
+//     .limit(count)
+//     .offset(page)
+// }
 
 //   let queryOperation = DBSt('platform_market_prices2')
 //   const { sortby = 'udate', sortdir = 'desc', limit = 50 } = query
