@@ -2,7 +2,8 @@ const DBSt = require('../database/dbSTConfig')
 
 module.exports = {
   getSautiDataClient,
-  getListsOfThings
+  getListsOfThings,
+  mcpList
 }
 
 // Helper function with filter searches for client side
@@ -10,7 +11,8 @@ module.exports = {
 
 function getSautiDataClient(query) {
   let queryOperation = DBSt('platform_market_prices2')
-  let { count, page } = query
+  let { count, page, startDate, endDate } = query;
+  console.log(startDate, endDate);
 
   if (count) {
     count = parseInt(count)
@@ -61,28 +63,62 @@ function getSautiDataClient(query) {
     queryOperation = queryOperation.whereIn('product', query.p)
   }
 
-  return (
-    queryOperation
-      .select(
-        'country',
-        'market',
-        'source',
-        'product_cat',
-        'product_agg',
-        'product',
-        'retail',
-        'wholesale',
-        'currency',
-        'unit',
-        'date',
-        'udate'
-      )
-      .orderBy('date', 'desc')
-      .where('active', (query.a = 1))
-      // .andWhereBetween('date', [startDate, endDate])
-      .limit(count)
-      .offset(page)
+  queryOperation = queryOperation
+  .select(
+    'country',
+    'market',
+    'source',
+    'product_cat',
+    'product_agg',
+    'product',
+    'retail',
+    'wholesale',
+    'currency',
+    'unit',
+    'date',
+    'udate'
   )
+  .orderBy('date', 'desc')
+  .where('active', (query.a = 1));
+
+  if (startDate && endDate) {
+    queryOperation = queryOperation.andWhereBetween('date', [startDate, endDate])
+  }
+  queryOperation = queryOperation.limit(count).offset(page);
+
+  return queryOperation;
+}
+function marketList(){
+  return DBSt('platform_market_prices2').distinct('market').orderBy('market')
+}
+function countryList(){
+  return DBSt('platform_market_prices2').distinct('country').orderBy('country')
+}
+function productList(){
+  return DBSt('platform_market_prices2').distinct('product').orderBy('product')
+}
+function pcatList(){
+  return DBSt('platform_market_prices2').distinct('product_cat').orderBy('product_cat')
+}
+function paggList(){
+  return DBSt('platform_market_prices2').distinct('product_agg').orderBy('product_agg')
+}
+function mcpList(){
+  const marketQuery = marketList()
+  const countryQuery = countryList()
+  const productQuery = productList()
+  const pcatQuery = pcatList()
+  const paggQuery = paggList()
+  return Promise.all([marketQuery, countryQuery, productQuery, pcatQuery, paggQuery])
+    .then(([markets, country, product, category, aggregator])=> {
+      let total = {}
+       total.countries = country;
+       total.products = product;
+       total.markets = markets;
+       total.categories = category;
+       total.aggregators = aggregator;
+       return total;
+    })
 }
 
 function getListsOfThings(query, selector) {
@@ -107,14 +143,15 @@ function getListsOfThings(query, selector) {
       return queryOperation.distinct('market').orderBy('market')
   }
 }
-function dateRange() {
-  return DBSt('platform_market_prices2')
-    .select('*')
-    .where('product', product)
-    .andWhereBetween('date', [startDate, endDate])
-    .limit(count)
-    .offset(page)
-}
+
+// function dateRange() {
+//   return DBSt('platform_market_prices2')
+//     .select('*')
+//     .where('product', product)
+//     .andWhereBetween('date', [startDate, endDate])
+//     .limit(count)
+//     .offset(page)
+// }
 
 //   let queryOperation = DBSt('platform_market_prices2')
 //   const { sortby = 'udate', sortdir = 'desc', limit = 50 } = query

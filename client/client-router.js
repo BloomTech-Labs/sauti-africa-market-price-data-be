@@ -1,7 +1,7 @@
 const express = require('express')
 const tokenMiddleware = require('../middleware/token-middleware')
 const { queryCurrency } = require('../middleware/validate')
-
+const db = require('../api-key/dbConfig')
 const Client = require('./client-model.js')
 const router = express.Router()
 
@@ -38,6 +38,30 @@ router.get('/lists', (req, res) => {
       console.log(error)
       res.status(500).send(error.message)
     })
+})
+router.get('/superlist', (req, res) => {
+  Client.mcpList()
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message)
+
+  })
+})
+function apiKeyFn(){
+  return db('apiKeys')
+}
+router.get('/users', (req, res)=> {
+  apiKeyFn().then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message)
+
+  })
 })
 
 module.exports = router
