@@ -97,19 +97,28 @@ function countryList(){
 function productList(){
   return DBSt('platform_market_prices2').distinct('product').orderBy('product')
 }
+function pcatList(){
+  return DBSt('platform_market_prices2').distinct('product_cat').orderBy('product_cat')
+}
+function paggList(){
+  return DBSt('platform_market_prices2').distinct('product_agg').orderBy('product_agg')
+}
 function mcpList(){
   const marketQuery = marketList()
   const countryQuery = countryList()
   const productQuery = productList()
-  return Promise.all([marketQuery, countryQuery, productQuery])
-    .then(([markets, country, product])=> {
+  const pcatQuery = pcatList()
+  const paggQuery = paggList()
+  return Promise.all([marketQuery, countryQuery, productQuery, pcatQuery, paggQuery])
+    .then(([markets, country, product, category, aggregator])=> {
       let total = {}
        total.countries = country;
        total.products = product;
        total.markets = markets;
+       total.categories = category;
+       total.aggregators = aggregator;
        return total;
     })
-  
 }
 
 function getListsOfThings(query, selector) {
