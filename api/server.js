@@ -49,7 +49,7 @@ async function getThings(cursor) {
     const nextId = cursorArray[1];
     entries = await DBSt("platform_market_prices2")
       .where(function() {
-        this.whereRaw("date < ?", [nextDate]).andWhereRaw("id < ?", [nextId]);
+        this.whereRaw("id < ?", [nextId]).andWhereRaw("date <= ?", [nextDate]);
       })
       .orderBy("date", "desc")
       .orderBy("id", "desc")
@@ -58,9 +58,12 @@ async function getThings(cursor) {
     const cursorArray = cursor.prev.split("_");
     const prevDate = cursorArray[0];
     const prevId = cursorArray[1];
+    const limit = Number(prevId) + 3;
+    const stringLim = limit.toString();
     entries = await DBSt("platform_market_prices2")
-      .where(function() {
-        this.whereRaw("date > ?", [prevDate]).andWhereRaw("id > ?", [prevId]);
+      .whereRaw("id > ?", [prevId])
+      .andWhereNot(function() {
+        this.whereRaw("id > ?", [stringLim]);
       })
       .orderBy("date", "desc")
       .orderBy("id", "desc")
