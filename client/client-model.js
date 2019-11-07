@@ -14,16 +14,16 @@ function getSautiDataClient(query) {
   let { count, page, startDate, endDate } = query;
   console.log(startDate, endDate);
 
-  if (count) {
-    count = parseInt(count)
-  } else {
-    count = 20
-  }
-  if (page) {
-    page = (parseInt(page) - 1) * count
-  } else {
-    page = 0
-  }
+  // if (count) {
+  //   count = parseInt(count)
+  // } else {
+  //   count = 20
+  // }
+  // if (page) {
+  //   page = (parseInt(page) - 1) * count
+  // } else {
+  //   page = 0
+  // }
 
   // If user wants data from specific country/countries
   if (query.c && !Array.isArray(query.c)) {
@@ -84,7 +84,7 @@ function getSautiDataClient(query) {
   if (startDate && endDate) {
     queryOperation = queryOperation.andWhereBetween('date', [startDate, endDate])
   }
-  queryOperation = queryOperation.limit(count).offset(page);
+  // queryOperation = queryOperation.limit(count).offset(page);
 
   return queryOperation;
 }
