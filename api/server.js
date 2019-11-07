@@ -37,17 +37,55 @@ server.get("/", (req, res) => {
   );
 });
 
-function getThings() {
-  return DBSt("platform_market_prices")
-    .where()
-    .orderBy("date")
-    .limit(1);
+async function getThings(cursor) {
+  let entries;
+
+  if (cursor.next && cursor.prev)
+    throw { message: "Cannot use next and prev at the same time!" };
+
+  if (cursor.next) {
+    const cursorArray = cursor.next.split("_");
+    const nextDate = cursorArray[0];
+    const nextId = cursorArray[1];
+    entries = await DBSt("platform_market_prices2")
+      .where(function() {
+        this.whereRaw("date < ?", [nextDate]).andWhereRaw("id < ?", [nextId]);
+      })
+      .orderBy("date", "desc")
+      .orderBy("id", "desc")
+      .limit(3);
+  } else if (cursor.prev) {
+    const cursorArray = cursor.prev.split("_");
+    const prevDate = cursorArray[0];
+    const prevId = cursorArray[1];
+    entries = await DBSt("platform_market_prices2")
+      .where(function() {
+        this.whereRaw("date > ?", [prevDate]).andWhereRaw("id > ?", [prevId]);
+      })
+      .orderBy("date", "desc")
+      .orderBy("id", "desc")
+      .limit(3);
+  } else if (!cursor.next && !cursor.prev) {
+    entries = await DBSt("platform_market_prices2")
+      .orderBy("date", "desc")
+      .orderBy("id", "desc")
+      .limit(3);
+  }
+
+  const firstEntry = entries[0];
+  const lastEntry = entries[entries.length - 1];
+  entries.length
+    ? (prev = `${firstEntry.date}_${firstEntry.id}`)
+    : (prev = null);
+  entries.length ? (next = `${lastEntry.date}_${lastEntry.id}`) : (next = null);
+
+  return { records: entries, next: next, prev: prev };
 }
 
-server.get("/sauti", apiAuthenticator, apiLimiter, (_req, res) => {
-  getThings()
-    .then(records => {
-      res.status(200).json(records);
+server.get("/sauti", (req, res) => {
+  getThings(req.query)
+    .then(response => {
+      res.status(200).json(response);
     })
     .catch(error => {
       console.log(error);
