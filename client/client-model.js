@@ -84,11 +84,14 @@ async function getSautiDataClient(query) {
 
     entries = await queryOperation
       .where(function() {
-        this.whereRaw("date < ?", [nextDate]).andWhereRaw("id <= ?", [nextId]);
+        this.whereRaw("date < ?", [nextDate]).orWhere(function() {
+          this.whereRaw("date = ?", [nextDate]).andWhereRaw("id <= ?", [
+            nextId
+          ]);
+        });
+        // .andWhereRaw("id <= ?", [nextId]);
       })
-      .orWhere(function() {
-        this.whereRaw("date = ?", [nextDate]).andWhereRaw("id <= ?", [nextId]);
-      })
+
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
@@ -133,24 +136,21 @@ async function getSautiDataClient(query) {
       queryOperation = queryOperation.whereIn("product", query.p);
     }
 
-    queryOperation = queryOperation
-      .select(
-        "id",
-        "country",
-        "market",
-        "source",
-        "product_cat",
-        "product_agg",
-        "product",
-        "retail",
-        "wholesale",
-        "currency",
-        "unit",
-        "date",
-        "udate"
-      )
-      .orderBy("date", "desc")
-      .where("active", (query.a = 1));
+    queryOperation = queryOperation.select(
+      "id",
+      "country",
+      "market",
+      "source",
+      "product_cat",
+      "product_agg",
+      "product",
+      "retail",
+      "wholesale",
+      "currency",
+      "unit",
+      "date",
+      "udate"
+    );
 
     if (startDate && endDate) {
       queryOperation = queryOperation.andWhereBetween("date", [
@@ -160,6 +160,7 @@ async function getSautiDataClient(query) {
     }
     totalCount = await queryOperation.clone().count();
     entries = await queryOperation
+      .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
       .limit(51);
