@@ -7,7 +7,7 @@ const router = express.Router();
 
 const convertCurrencies = require("../currency");
 
-router.get("/", queryCurrency, (req, res) => {
+router.get("/", tokenMiddleware, queryCurrency, (req, res) => {
   Client.getSautiDataClient(req.query)
     .then(records => {
       convertCurrencies(records, req.currency)
