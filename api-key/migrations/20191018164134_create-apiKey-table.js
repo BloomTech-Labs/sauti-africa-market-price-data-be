@@ -1,17 +1,17 @@
 exports.up = function(knex) {
-  return knex.schema.createTable('apiKeys', tbl => {
-    tbl.increments()
+  return knex.schema.createTable("apiKeys", tbl => {
+    tbl.increments();
     tbl
-      .text('key', 128)
+      .text("key", 128)
       .unique()
-      .notNullable()
+      .notNullable();
     tbl
-      .text('user_id')
+      .text("user_id")
       .unique()
-      .notNullable()
-  })
-}
+      .notNullable();
+  });
+};
 
 exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('apiKeys')
-}
+  return knex.schema.dropTableIfExists("apiKeys");
+};
