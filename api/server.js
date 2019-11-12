@@ -9,7 +9,7 @@ const apiAuthenticator = require("../middleware/apikey-middleware");
 const apiLimiter = require("../middleware/api-limiter-middleware");
 const devRouter = require("../developer/developer-router.js");
 const clientRouter = require("../client/client-router.js");
-
+const tokenmiddleware = require('../middleware/token-middleware')
 const server = express();
 //Initialize Moesif and set up the middleware
 const moesifExpress = require("moesif-express");
@@ -53,7 +53,7 @@ async function getThings(cursor) {
       })
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(3);
+      .limit(1);
   } else if (cursor.prev) {
     const cursorArray = cursor.prev.split("_");
     const prevDate = cursorArray[0];
@@ -67,12 +67,12 @@ async function getThings(cursor) {
       })
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(3);
+      .limit(1);
   } else if (!cursor.next && !cursor.prev) {
     entries = await DBSt("platform_market_prices2")
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(3);
+      .limit(1);
   }
 
   const firstEntry = entries[0];
