@@ -3,6 +3,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 
+const Client = require('../client/client-model')
+const Validate = require('../middleware/validate')
+
 const DBSt = require("../database/dbSTConfig");
 const apikeyRoute = require("../routes/apikeyRoute");
 const apiAuthenticator = require("../middleware/apikey-middleware");
@@ -85,8 +88,8 @@ async function getThings(cursor) {
   return { records: entries, next: next, prev: prev };
 }
 
-server.get("/sauti", (req, res) => {
-  getThings(req.query)
+server.get("/sauti",   (req, res) => {
+  Client.getPlay(req.query)
     .then(response => {
       res.status(200).json(response);
     })
