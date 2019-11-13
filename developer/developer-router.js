@@ -11,20 +11,25 @@ router.get(
   validate.queryCountPage,
   (req, res) => {
     Developer.getSautiData(req.query)
-      .then(records => {
-        if (!records || records.length < 1) {
+      .then(response => {
+        if (!response.records || response.records.length < 1) {
           res.status(404).json({
             message:
               "Records don't exist here, change the query parameters or change page no. "
           });
         } else {
-          convertCurrencies(records, req.currency)
+          convertCurrencies(response, req.currency)
             .then(converted => {
               res.status(200).json({
                 warning: converted.warning,
                 message: req.message,
                 records: converted.data,
-                ratesUpdated: converted.ratesUpdated
+                ratesUpdated: converted.ratesUpdated,
+                next: converted.next,
+                prev: converted.prev,
+                pageCount: converted.count
+                  ? converted.count[0]["count(*)"]
+                  : "page count available on initial call"
               });
             })
             .catch(error => {
@@ -131,8 +136,7 @@ router.get(
   validate.queryProductDate,
   validate.queryCountPage,
   (req, res) => {
-    const { product, startDate, endDate, page, count } = req.query;
-    Developer.getProductPriceRange(product, startDate, endDate, count, page)
+    Developer.getProductPriceRange(req.query)
       .then(records => {
         convertCurrencies(records, req.currency)
           .then(converted => {
@@ -140,7 +144,12 @@ router.get(
               warning: converted.warning,
               message: req.message,
               records: converted.data,
-              ratesUpdated: converted.ratesUpdated
+              ratesUpdated: converted.ratesUpdated,
+              next: converted.next,
+              prev: converted.prev,
+              pageCount: converted.count
+                ? converted.count[0]["count(*)"]
+                : "page count available on initial call"
             });
           })
           .catch(error => {
