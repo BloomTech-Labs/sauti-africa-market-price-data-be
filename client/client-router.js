@@ -1,6 +1,6 @@
 const express = require("express");
 const tokenMiddleware = require("../middleware/token-middleware");
-const { queryCurrency } = require("../middleware/validate");
+const { queryCurrency, queryProductDate } = require("../middleware/validate");
 const db = require("../api-key/dbConfig");
 const Client = require("./client-model.js");
 const router = express.Router();
@@ -67,5 +67,27 @@ router.get("/users", (req, res) => {
       res.status(500).send(err.message);
     });
 });
+//playground routes//
+//product date range//
+router.get('/playground/date',  (req, res)=> {
+  Client.getProductPriceRangePlay(req.query)
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message);
+  })
+})
+router.get('/playground/latest', queryProductDate, (req, res) => {
+  Client.getPMPlay(req.query)
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message);
+  })
+})
 
 module.exports = router;
