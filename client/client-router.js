@@ -1,18 +1,18 @@
-const express = require('express')
+const express = require("express");
 const tokenMiddleware =
-  process.env.npm_lifecycle_event !== 'dev'
-    ? require('../middleware/token-middleware')
+  process.env.npm_lifecycle_event !== "dev"
+    ? require("../middleware/token-middleware")
     : function(req, res, next) {
-        next()
-      }
-const { queryCurrency } = require('../middleware/validate')
-const db = require('../api-key/dbConfig')
-const Client = require('./client-model.js')
-const router = express.Router()
+        next();
+      };
+const { queryCurrency } = require("../middleware/validate");
+const db = require("../api-key/dbConfig");
+const Client = require("./client-model.js");
+const router = express.Router();
 
-const convertCurrencies = require('../currency')
+const convertCurrencies = require("../currency");
 
-router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
+router.get("/", tokenMiddleware, queryCurrency, (req, res) => {
   Client.getSautiDataClient(req.query)
     .then(records => {
       convertCurrencies(records, req.currency)
@@ -24,53 +24,51 @@ router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
             next: converted.next,
             prev: converted.prev,
             count: converted.count,
-            first: converted.first,
-            last: converted.last,
             ratesUpdated: converted.ratesUpdated
-          })
+          });
         })
         .catch(error => {
-          console.log(error)
-        })
+          console.log(error);
+        });
     })
     .catch(error => {
-      console.log(error)
-      res.status(500).send(error.message)
-    })
-})
+      console.log(error);
+      res.status(500).send(error.message);
+    });
+});
 
-router.get('/lists', (req, res) => {
+router.get("/lists", (req, res) => {
   Client.getListsOfThings(req.query.list)
     .then(records => {
-      res.status(200).json(records)
+      res.status(200).json(records);
     })
     .catch(error => {
-      console.log(error)
-      res.status(500).send(error.message)
-    })
-})
-router.get('/superlist', (req, res) => {
+      console.log(error);
+      res.status(500).send(error.message);
+    });
+});
+router.get("/superlist", (req, res) => {
   Client.mcpList()
     .then(records => {
-      res.status(200).json(records)
+      res.status(200).json(records);
     })
     .catch(err => {
-      console.log(err.message)
-      res.status(500).send(err.message)
-    })
-})
+      console.log(err.message);
+      res.status(500).send(err.message);
+    });
+});
 function apiKeyFn() {
-  return db('apiKeys')
+  return db("apiKeys");
 }
-router.get('/users', (req, res) => {
+router.get("/users", (req, res) => {
   apiKeyFn()
     .then(records => {
-      res.status(200).json(records)
+      res.status(200).json(records);
     })
     .catch(err => {
-      console.log(err.message)
-      res.status(500).send(err.message)
-    })
-})
+      console.log(err.message);
+      res.status(500).send(err.message);
+    });
+});
 
-module.exports = router
+module.exports = router;
