@@ -27,6 +27,7 @@ router.get(
                     records: converted.data,
                     ratesUpdated: converted.ratesUpdated,
                     next: converted.next,
+                    topPageValue: converted.prev,
                     pageCount: converted.count[0]["count(*)"]
                   })
                 : res.status(200).json({
@@ -34,7 +35,8 @@ router.get(
                     message: req.message,
                     records: converted.data,
                     ratesUpdated: converted.ratesUpdated,
-                    next: converted.next
+                    next: converted.next,
+                    topPageValue: converted.prev
                   });
             })
             .catch(error => {
@@ -152,6 +154,7 @@ router.get(
                   records: converted.data,
                   ratesUpdated: converted.ratesUpdated,
                   next: converted.next,
+                  topPageValue: converted.prev,
                   pageCount: converted.count[0]["count(*)"]
                 })
               : res.status(200).json({
@@ -159,7 +162,8 @@ router.get(
                   message: req.message,
                   records: converted.data,
                   ratesUpdated: converted.ratesUpdated,
-                  next: converted.next
+                  next: converted.next,
+                  topPageValue: converted.prev
                 });
           })
           .catch(error => {
