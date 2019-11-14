@@ -100,7 +100,7 @@ async function getSautiDataClient(query) {
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(1);
+      .limit(50);
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt("platform_market_prices2");
@@ -168,7 +168,7 @@ async function getSautiDataClient(query) {
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(1);
+      .limit(50);
   }
 
   const lastEntry = entries[entries.length - 1];
