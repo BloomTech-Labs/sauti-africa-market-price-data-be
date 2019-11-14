@@ -20,17 +20,22 @@ router.get(
         } else {
           convertCurrencies(response, req.currency)
             .then(converted => {
-              res.status(200).json({
-                warning: converted.warning,
-                message: req.message,
-                records: converted.data,
-                ratesUpdated: converted.ratesUpdated,
-                next: converted.next,
-                prev: converted.prev,
-                pageCount: converted.count
-                  ? converted.count[0]["count(*)"]
-                  : "page count available on initial call"
-              });
+              converted.count
+                ? res.status(200).json({
+                    warning: converted.warning,
+                    message: req.message,
+                    records: converted.data,
+                    ratesUpdated: converted.ratesUpdated,
+                    next: converted.next,
+                    pageCount: converted.count[0]["count(*)"]
+                  })
+                : res.status(200).json({
+                    warning: converted.warning,
+                    message: req.message,
+                    records: converted.data,
+                    ratesUpdated: converted.ratesUpdated,
+                    next: converted.next
+                  });
             })
             .catch(error => {
               console.log(error);
