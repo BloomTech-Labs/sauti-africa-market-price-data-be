@@ -3,8 +3,9 @@ module.exports = {
   queryProductMarket,
   queryProductDate,
   queryCountPage,
-  queryCurrency
-};
+  queryCurrency,
+  playgroundDR
+}
 
 function queryProduct(req, res, next) {
   if (req.query.product === undefined) {
@@ -47,6 +48,21 @@ function queryProductMarket(req, res, next) {
     next();
   }
 }
+function playgroundDR(req, res, next){
+
+  if(!req.query.hasOwnProperty('product')){
+    res.status(400)
+    .json({errorMessage: 'please supply product'})
+  } else if (!req.query.hasOwnProperty('startDate')){
+    res.status(400)
+    .json({errorMessage:'please supply startDate=YYYY-MM-DD'})
+  } else if(!req.query.hasOwnProperty('endDate')){
+    res.status(400)
+    .json({errorMessage:'please supple endDate=YYYY-MM-DD'})
+  } else {
+    next()
+  }
+}
 
 function queryProductDate(req, res, next) {
   if (req.query.product === undefined) {
@@ -62,11 +78,9 @@ function queryProductDate(req, res, next) {
   } else if (req.query.endDate === undefined) {
     res
       .status(400)
-      .json({
-        errorMessage: "Please supply the query parameter of 'endDate' "
-      });
-  } else {
-    next();
+      .json({ errorMessage: "Please supply the query parameter of 'endDate' " })
+  } else{
+    next()
   }
 }
 

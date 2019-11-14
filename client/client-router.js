@@ -1,14 +1,15 @@
 const express = require("express");
+const router = express.Router();
+const { queryCurrency, queryProductMarket, playgroundDR } = require("../middleware/validate");
+// const validate = require('../middleware/validate.js')
 const tokenMiddleware =
   process.env.npm_lifecycle_event !== "dev"
     ? require("../middleware/token-middleware")
     : function(req, res, next) {
         next();
       };
-const { queryCurrency } = require("../middleware/validate");
 const db = require("../api-key/dbConfig");
 const Client = require("./client-model.js");
-const router = express.Router();
 
 const convertCurrencies = require("../currency");
 
@@ -70,5 +71,30 @@ router.get("/users", (req, res) => {
       res.status(500).send(err.message);
     });
 });
+//playground routes//
+//product date range//
+router.get('/playground/date', playgroundDR,  (req, res)=> {
+  
+  Client.getProductPriceRangePlay(req.query)
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).json(err);
+  })
+})
+
+//get latest price of product in market for playground//
+router.get('/playground/latest', queryProductMarket, (req, res) => {
+  Client.getPMPlay(req.query)
+  .then(records => {
+    res.status(200).json(records)
+  })
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message);
+  })
+})
 
 module.exports = router;
