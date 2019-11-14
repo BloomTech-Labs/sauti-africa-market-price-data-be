@@ -1,27 +1,27 @@
-const { promisify } = require('util')
+const { promisify } = require("util");
 
-const client = require('../redis')
+const client = require("../redis");
 
-client.get = promisify(client.get)
+client.get = promisify(client.get);
 
-const CALL_LIMIT = 20 // change as needed
+const CALL_LIMIT = 10000; // change as needed
 
 module.exports = async (req, res, next) => {
-  const { key } = req
+  const { key } = req;
 
-  const calls = await client.get(key)
+  const calls = await client.get(key);
 
   if (calls) {
     if (calls < CALL_LIMIT) {
-      const newCalls = Number(calls) + 1
-      client.set(key, newCalls)
-      next()
+      const newCalls = Number(calls) + 1;
+      client.set(key, newCalls);
+      next();
     } else
       res.status(403).json({
         message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls`
-      })
+      });
   } else {
-    client.set(key, 0)
-    next()
+    client.set(key, 0);
+    next();
   }
-}
+};
