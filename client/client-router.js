@@ -1,10 +1,14 @@
 const express = require("express");
-const tokenMiddleware = require("../middleware/token-middleware");
 const { queryCurrency, queryProductMarket, playgroundDR } = require("../middleware/validate");
 // const validate = require('../middleware/validate.js')
+const tokenMiddleware =
+  process.env.npm_lifecycle_event !== "dev"
+    ? require("../middleware/token-middleware")
+    : function(req, res, next) {
+        next();
+      };
 const db = require("../api-key/dbConfig");
 const Client = require("./client-model.js");
-const router = express.Router();
 
 const convertCurrencies = require("../currency");
 
@@ -20,8 +24,6 @@ router.get("/", tokenMiddleware, queryCurrency, (req, res) => {
             next: converted.next,
             prev: converted.prev,
             count: converted.count,
-            first: converted.first,
-            last: converted.last,
             ratesUpdated: converted.ratesUpdated
           });
         })

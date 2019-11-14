@@ -89,9 +89,7 @@ module.exports = async (data, targetCurrency) => {
         }),
         next: data.next,
         prev: data.prev,
-        count: data.count,
-        first: data.first,
-        last: data.last
+        count: data.count
       };
     })
     .catch(error => {
