@@ -100,7 +100,7 @@ async function getSautiDataClient(query, csvLimit) {
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(csvLimit || 50);
+      .limit(csvLimit || 51);
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt("platform_market_prices2");
@@ -174,7 +174,7 @@ async function getSautiDataClient(query, csvLimit) {
   const lastEntry = entries[entries.length - 1];
 
   entries.length ? (next = `${lastEntry.date}_${lastEntry.id}`) : (next = null);
-  const entriesOffset = entries.splice(0, csvLimit||50);
+  const entriesOffset = entries.splice(0, csvLimit||51);
 
   const firstEntry = entriesOffset[0];
   entriesOffset.length
