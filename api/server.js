@@ -3,28 +3,17 @@ const cors = require('cors')
 const helmet = require('helmet')
 const compression = require('compression')
 
-<<<<<<< HEAD
+const Client = require('../client/client-model')
+const Validate = require('../middleware/validate')
+
 const DBSt = require('../database/dbSTConfig')
 const apikeyRoute = require('../routes/apikeyRoute')
 const apiAuthenticator = require('../middleware/apikey-middleware')
 const apiLimiter = require('../middleware/api-limiter-middleware')
 const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
-
-const server = express()
-=======
-const Client = require('../client/client-model')
-const Validate = require('../middleware/validate')
-
-const DBSt = require("../database/dbSTConfig");
-const apikeyRoute = require("../routes/apikeyRoute");
-const apiAuthenticator = require("../middleware/apikey-middleware");
-const apiLimiter = require("../middleware/api-limiter-middleware");
-const devRouter = require("../developer/developer-router.js");
-const clientRouter = require("../client/client-router.js");
 const tokenmiddleware = require('../middleware/token-middleware')
-const server = express();
->>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
+const server = express()
 //Initialize Moesif and set up the middleware
 const moesifExpress = require('moesif-express')
 const moesifMiddleware = moesifExpress({
@@ -65,15 +54,9 @@ async function getThings(cursor) {
       .where(function() {
         this.whereRaw('id < ?', [nextId]).andWhereRaw('date <= ?', [nextDate])
       })
-<<<<<<< HEAD
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(3)
-=======
-      .orderBy("date", "desc")
-      .orderBy("id", "desc")
-      .limit(1);
->>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
+      .limit(1)
   } else if (cursor.prev) {
     const cursorArray = cursor.prev.split('_')
     const prevDate = cursorArray[0]
@@ -85,25 +68,14 @@ async function getThings(cursor) {
       .andWhereNot(function() {
         this.whereRaw('id > ?', [stringLim])
       })
-<<<<<<< HEAD
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(3)
+      .limit(1)
   } else if (!cursor.next && !cursor.prev) {
     entries = await DBSt('platform_market_prices2')
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(3)
-=======
-      .orderBy("date", "desc")
-      .orderBy("id", "desc")
-      .limit(1);
-  } else if (!cursor.next && !cursor.prev) {
-    entries = await DBSt("platform_market_prices2")
-      .orderBy("date", "desc")
-      .orderBy("id", "desc")
-      .limit(1);
->>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
+      .limit(1)
   }
 
   const firstEntry = entries[0]
@@ -116,13 +88,8 @@ async function getThings(cursor) {
   return { records: entries, next: next, prev: prev }
 }
 
-<<<<<<< HEAD
 server.get('/sauti', (req, res) => {
-  getThings(req.query)
-=======
-server.get("/sauti",   (req, res) => {
   Client.getPlay(req.query)
->>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
     .then(response => {
       res.status(200).json(response)
     })
