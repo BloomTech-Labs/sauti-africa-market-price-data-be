@@ -1,4 +1,5 @@
 const express = require("express");
+const { parse } = require('json2csv');
 const router = express.Router();
 const { queryCurrency, queryProductMarket, playgroundDR } = require("../middleware/validate");
 // const validate = require('../middleware/validate.js')
@@ -96,5 +97,37 @@ router.get('/playground/latest', queryProductMarket, (req, res) => {
     res.status(500).send(err.message);
   })
 })
+
+//export all
+
+router.get("/export", (req, res) => {
+ Client.getSautiDataClient(req.query, 10000000000)
+   .then(records => {
+     convertCurrencies(records, req.currency)
+       .then(converted => {
+         const data = {
+           warning: converted.warning,
+           message: req.message,
+           records: converted.data,
+           next: converted.next,
+           prev: converted.prev,
+           count: converted.count,
+           ratesUpdated: converted.ratesUpdated
+         }
+         var fields = ['id', 'country', 'market', 'product_cat', 'product_agg', 'product', 'currency', 'date', 'udate'];
+         const opts = { fields };
+         const csvData = parse(converted.data.records, opts);
+         res.attachment('filename.csv');
+         res.status(200).send(csvData);
+       })
+       .catch(error => {
+         console.log(error);
+       });
+   })
+   .catch(error => {
+     console.log(error);
+     res.status(500).send(error.message);
+   });
+});
 
 module.exports = router;

@@ -14,7 +14,7 @@ module.exports = {
 // Helper function with filter searches for client side
 // Flexible by allowing user to select whichever query they want.
 
-async function getSautiDataClient(query) {
+async function getSautiDataClient(query, csvLimit) {
   let { startDate, endDate } = query;
 
   let entries;
@@ -100,7 +100,7 @@ async function getSautiDataClient(query) {
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(50);
+      .limit(csvLimit || 50);
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt("platform_market_prices2");
@@ -168,13 +168,13 @@ async function getSautiDataClient(query) {
       .where("active", (query.a = 1))
       .orderBy("date", "desc")
       .orderBy("id", "desc")
-      .limit(51);
+      .limit(csvLimit || 51);
   }
 
   const lastEntry = entries[entries.length - 1];
 
   entries.length ? (next = `${lastEntry.date}_${lastEntry.id}`) : (next = null);
-  const entriesOffset = entries.splice(0, 50);
+  const entriesOffset = entries.splice(0, csvLimit||50);
 
   const firstEntry = entriesOffset[0];
   entriesOffset.length
