@@ -117,7 +117,7 @@ router.get("/export", (req, res) => {
          var fields = ['id', 'country', 'market', 'product_cat', 'product_agg', 'product', 'currency', 'date', 'udate'];
          const opts = { fields };
          const csvData = parse(converted.data.records, opts);
-         res.attachment('filename.csv');
+         res.attachment('SautiAfricaPriceData.csv');
          res.status(200).send(csvData);
        })
        .catch(error => {
