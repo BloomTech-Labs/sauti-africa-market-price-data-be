@@ -18,13 +18,15 @@ const Client = require('./client-model.js')
 const convertCurrencies = require('../currency')
 
 router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
+  const message = req.message && req.message.replace('50', '30')
+  req.query.count = 30
   Client.getSautiDataClient(req.query)
     .then(records => {
       convertCurrencies(records, req.currency)
         .then(converted => {
           res.status(200).json({
             warning: converted.warning,
-            message: req.message,
+            message: message,
             records: converted.data,
             next: converted.next,
             prev: converted.prev,
