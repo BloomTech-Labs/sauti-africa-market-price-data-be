@@ -3,7 +3,12 @@ module.exports = {
   queryProductMarket,
   queryProductDate,
   queryCountPage,
+<<<<<<< HEAD
   queryCurrency
+=======
+  queryCurrency,
+  playgroundDR
+>>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
 }
 
 function queryProduct(req, res, next) {
@@ -43,6 +48,21 @@ function queryProductMarket(req, res, next) {
     next()
   }
 }
+function playgroundDR(req, res, next){
+
+  if(!req.query.hasOwnProperty('product')){
+    res.status(400)
+    .json({errorMessage: 'please supply product'})
+  } else if (!req.query.hasOwnProperty('startDate')){
+    res.status(400)
+    .json({errorMessage:'please supply startDate=YYYY-MM-DD'})
+  } else if(!req.query.hasOwnProperty('endDate')){
+    res.status(400)
+    .json({errorMessage:'please supple endDate=YYYY-MM-DD'})
+  } else {
+    next()
+  }
+}
 
 function queryProductDate(req, res, next) {
   if (req.query.product === undefined) {
@@ -54,10 +74,17 @@ function queryProductDate(req, res, next) {
       errorMessage: "Please supply the query parameter of 'startDate' "
     })
   } else if (req.query.endDate === undefined) {
+<<<<<<< HEAD
     res.status(400).json({
       errorMessage: "Please supply the query parameter of 'endDate' "
     })
   } else {
+=======
+    res
+      .status(400)
+      .json({ errorMessage: "Please supply the query parameter of 'endDate' " })
+  } else{
+>>>>>>> 67aacf675545326cb116f9584bb53f1d94c3172f
     next()
   }
 }
