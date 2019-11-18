@@ -6,7 +6,6 @@ const {
   queryProductMarket,
   playgroundDR
 } = require('../middleware/validate')
-const validate = require('../middleware/validate.js')
 const tokenMiddleware =
   process.env.npm_lifecycle_event !== 'dev'
     ? require('../middleware/token-middleware')
