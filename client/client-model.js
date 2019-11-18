@@ -14,7 +14,7 @@ module.exports = {
 // Helper function with filter searches for client side
 // Flexible by allowing user to select whichever query they want.
 
-async function getSautiDataClient(query) {
+async function getSautiDataClient(query, csvLimit) {
   let { startDate, endDate } = query
 
   let entries
@@ -89,16 +89,19 @@ async function getSautiDataClient(query) {
 
     entries = await queryOperation
       .where(function() {
-        this.whereRaw('date < ?', [nextDate]).orWhere(function() {
-          this.whereRaw('date = ?', [nextDate]).andWhereRaw('id <= ?', [nextId])
-        })
-        // .andWhereRaw("id <= ?", [nextId]);
+        this.whereRaw('date < ?', [nextDate])
+          .orWhere(function() {
+            this.whereRaw('date = ?', [nextDate]).andWhereRaw('id <= ?', [
+              nextId
+            ])
+          })
+          .andWhereRaw('id <= ?', [nextId])
       })
 
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(31)
+      .limit(csvLimit || 30)
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt('platform_market_prices2')
@@ -166,13 +169,13 @@ async function getSautiDataClient(query) {
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(31)
+      .limit(csvLimit || 30)
   }
 
   const lastEntry = entries[entries.length - 1]
 
   entries.length ? (next = `${lastEntry.date}_${lastEntry.id}`) : (next = null)
-  const entriesOffset = entries.splice(0, 30)
+  const entriesOffset = entries.splice(0, csvLimit || 30)
 
   const firstEntry = entriesOffset[0]
   entriesOffset.length
