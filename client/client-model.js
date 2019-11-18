@@ -95,10 +95,12 @@ async function getSautiDataClient(query, csvLimit) {
         // .andWhereRaw("id <= ?", [nextId]);
       })
 
+
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
       .limit(csvLimit || 31)
+
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt('platform_market_prices2')
@@ -163,10 +165,12 @@ async function getSautiDataClient(query, csvLimit) {
     }
     totalCount = await queryOperation.clone().count()
     entries = await queryOperation
+
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
       .limit(csvLimit || 31)
+
   }
 
   const lastEntry = entries[entries.length - 1]
@@ -321,7 +325,9 @@ function getPlay(query) {
     .limit(1)
 }
 
+
 function getProductPriceRangePlay({ product, startDate, endDate }) {
+
   return DBSt('platform_market_prices2')
     .select('*')
     .where('product', product)
