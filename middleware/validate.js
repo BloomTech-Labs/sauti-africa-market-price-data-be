@@ -9,56 +9,48 @@ module.exports = {
 
 function queryProduct(req, res, next) {
   if (req.query.product === undefined) {
-    res
-      .status(400)
-      .json({
-        errorMessage: "Please supply the query parameter of 'product' "
-      });
+    res.status(400).json({
+      errorMessage: "Please supply the query parameter of 'product' "
+    })
   } else {
-    next();
+    next()
   }
 }
 
 function queryCountPage(req, res, next) {
   if (req.query.count > 500) {
-    req.message = "Each page can have maximum of 500 records";
-    req.query.count = 500;
-    next();
+    req.message = 'Each page can have maximum of 500 records'
+    req.query.count = 500
+    next()
   } else if (!req.query.count) {
-    req.message = "Default count is 50 per page";
-    req.query.count = 50;
-    next();
+    req.message = 'Default count is 30 per page'
+    req.query.count = 30
+    next()
   } else {
-    next();
+    next()
   }
 }
 
 function queryProductMarket(req, res, next) {
   if (req.query.product === undefined) {
-    res
-      .status(400)
-      .json({
-        errorMessage: "Please supply the query parameter of 'product' "
-      });
+    res.status(400).json({
+      errorMessage: "Please supply the query parameter of 'product' "
+    })
   } else if (req.query.market === undefined) {
     res
       .status(400)
-      .json({ errorMessage: "Please supply the query parameter of 'market' " });
+      .json({ errorMessage: "Please supply the query parameter of 'market' " })
   } else {
-    next();
+    next()
   }
 }
-function playgroundDR(req, res, next){
-
-  if(!req.query.hasOwnProperty('product')){
-    res.status(400)
-    .json({errorMessage: 'please supply product'})
-  } else if (!req.query.hasOwnProperty('startDate')){
-    res.status(400)
-    .json({errorMessage:'please supply startDate=YYYY-MM-DD'})
-  } else if(!req.query.hasOwnProperty('endDate')){
-    res.status(400)
-    .json({errorMessage:'please supple endDate=YYYY-MM-DD'})
+function playgroundDR(req, res, next) {
+  if (!req.query.hasOwnProperty('product')) {
+    res.status(400).json({ errorMessage: 'please supply product' })
+  } else if (!req.query.hasOwnProperty('startDate')) {
+    res.status(400).json({ errorMessage: 'please supply startDate=YYYY-MM-DD' })
+  } else if (!req.query.hasOwnProperty('endDate')) {
+    res.status(400).json({ errorMessage: 'please supply endDate=YYYY-MM-DD' })
   } else {
     next()
   }
@@ -66,47 +58,45 @@ function playgroundDR(req, res, next){
 
 function queryProductDate(req, res, next) {
   if (req.query.product === undefined) {
-    res
-      .status(400)
-      .json({
-        errorMessage: "Please supply the query parameter of 'product' "
-      });
+    res.status(400).json({
+      errorMessage: "Please supply the query parameter of 'product' "
+    })
   } else if (req.query.startDate === undefined) {
     res.status(400).json({
       errorMessage: "Please supply the query parameter of 'startDate' "
-    });
+    })
   } else if (req.query.endDate === undefined) {
     res
       .status(400)
       .json({ errorMessage: "Please supply the query parameter of 'endDate' " })
-  } else{
+  } else {
     next()
   }
 }
 
 function queryCurrency(req, res, next) {
   const supportedCurrencies = [
-    "MWK",
-    "RWF",
-    "KES",
-    "UGX",
-    "TZS",
-    "CDF",
-    "BIF",
-    "USD"
-  ];
-  const { currency } = req.query;
+    'MWK',
+    'RWF',
+    'KES',
+    'UGX',
+    'TZS',
+    'CDF',
+    'BIF',
+    'USD'
+  ]
+  const { currency } = req.query
 
   if (currency === undefined) {
-    req.currency = "USD";
-    next();
+    req.currency = 'USD'
+    next()
   } else if (!supportedCurrencies.includes(currency.toUpperCase())) {
     res.status(400).json({
       errorMessage: `Parameter 'currency' must be one of:  ${supportedCurrencies}`
-    });
+    })
   } else {
-    req.currency = currency.toUpperCase();
-    next();
+    req.currency = currency.toUpperCase()
+    next()
   }
 }
 
