@@ -50,7 +50,7 @@ function playgroundDR(req, res, next) {
   } else if (!req.query.hasOwnProperty('startDate')) {
     res.status(400).json({ errorMessage: 'please supply startDate=YYYY-MM-DD' })
   } else if (!req.query.hasOwnProperty('endDate')) {
-    res.status(400).json({ errorMessage: 'please supple endDate=YYYY-MM-DD' })
+    res.status(400).json({ errorMessage: 'please supply endDate=YYYY-MM-DD' })
   } else {
     next()
   }
