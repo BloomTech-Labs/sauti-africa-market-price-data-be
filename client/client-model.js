@@ -89,19 +89,16 @@ async function getSautiDataClient(query, csvLimit) {
 
     entries = await queryOperation
       .where(function() {
-        this.whereRaw('date < ?', [nextDate])
-          .orWhere(function() {
-            this.whereRaw('date = ?', [nextDate]).andWhereRaw('id <= ?', [
-              nextId
-            ])
-          })
-          .andWhereRaw('id <= ?', [nextId])
+        this.whereRaw('date < ?', [nextDate]).orWhere(function() {
+          this.whereRaw('date = ?', [nextDate]).andWhereRaw('id <= ?', [nextId])
+        })
+        // .andWhereRaw("id <= ?", [nextId]);
       })
 
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(csvLimit || 30)
+      .limit(csvLimit || 31)
   } else {
     // If user wants data from specific country/countries
     let queryOperation = DBSt('platform_market_prices2')
@@ -169,7 +166,7 @@ async function getSautiDataClient(query, csvLimit) {
       .where('active', (query.a = 1))
       .orderBy('date', 'desc')
       .orderBy('id', 'desc')
-      .limit(csvLimit || 30)
+      .limit(csvLimit || 31)
   }
 
   const lastEntry = entries[entries.length - 1]
