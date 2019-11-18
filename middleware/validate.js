@@ -23,8 +23,8 @@ function queryCountPage(req, res, next) {
     req.query.count = 500
     next()
   } else if (!req.query.count) {
-    req.message = 'Default count is 50 per page'
-    req.query.count = 50
+    req.message = 'Default count is 30 per page'
+    req.query.count = 30
     next()
   } else {
     next()
