@@ -2,7 +2,6 @@ const DBSt = require('../database/dbSTConfig')
 
 module.exports = {
   getSautiDataClient,
-  getListsOfThings,
   mcpList,
   getPlay,
   getProductPriceRangePlay,
@@ -11,8 +10,10 @@ module.exports = {
 
 // Grid table functions
 
-// Helper function with filter searches for client side
-// Flexible by allowing user to select whichever query they want.
+// Helper function with filter searches for data table on client side
+// Flexible by allowing user to select whichever query they want
+// Cursor based pagination implemented for data table on client side
+// We used wherein because it takes an array, we leveraged the natural behavior of the req.query object where when keys are put in multiple times their values automatically form an array on the req.query object; if it's not an array (a key is only used once) we make it an array to use the wherein //
 
 async function getSautiDataClient(query, csvLimit) {
   let { startDate, endDate } = query
@@ -190,6 +191,9 @@ async function getSautiDataClient(query, csvLimit) {
     count: totalCount
   }
 }
+
+//these functions are declared here to be used in the mcpList function below //
+//
 function marketList() {
   return DBSt('platform_market_prices2')
     .distinct('market')
@@ -215,6 +219,8 @@ function paggList() {
     .distinct('product_agg')
     .orderBy('product_agg')
 }
+//
+// fn for serving up lists  to the grid filter inputs //
 function mcpList() {
   const marketQuery = marketList()
   const countryQuery = countryList()
@@ -238,32 +244,12 @@ function mcpList() {
   })
 }
 
-function getListsOfThings(query, selector) {
-  let queryOperation = DBSt('platform_market_prices2')
-  if (query === undefined) {
-    query = 'market'
-  }
-  switch (query.toLowerCase()) {
-    case 'market':
-      return queryOperation.distinct('market').orderBy('market')
-    case 'country':
-      return queryOperation.distinct('country').orderBy('country')
-    case 'source':
-      return queryOperation.distinct('source').orderBy('source')
-    case 'product':
-      return queryOperation.distinct('product').orderBy('product')
-    case 'category':
-      return queryOperation.distinct('product_cat').orderBy('product_cat')
-    case 'aggregator':
-      return queryOperation.distinct('product_agg').orderBy('product_agg')
-    default:
-      return queryOperation.distinct('market').orderBy('market')
-  }
-}
+
 // End of Grid table functions
 
 // Playground functions
-//filter playground function//
+// filter playground function //
+// this playground endpoint's route is in sever.js //
 function getPlay(query) {
   let queryOperation = DBSt('platform_market_prices2')
 
@@ -325,7 +311,7 @@ function getPlay(query) {
     .limit(1)
 }
 
-
+// get price of product over a range of dates for the playground - limited by 1 //
 function getProductPriceRangePlay({ product, startDate, endDate }) {
 
   return DBSt('platform_market_prices2')
@@ -335,6 +321,7 @@ function getProductPriceRangePlay({ product, startDate, endDate }) {
     .limit(1)
 }
 
+// get price of product in a specific market for playground //
 function getPMPlay(query) {
   const { product, market } = query
   let queryOperation = DBSt('platform_market_prices2')
