@@ -10,7 +10,7 @@ module.exports = {
 function queryProduct(req, res, next) {
   if (req.query.product === undefined) {
     res.status(400).json({
-      errorMessage: "Please supply the query parameter of 'product' "
+      message: "Please supply the query parameter of 'product' "
     })
   } else {
     next()
@@ -30,45 +30,46 @@ function queryCountPage(req, res, next) {
     next()
   }
 }
-
+//middleware for product in particular market //
 function queryProductMarket(req, res, next) {
   if (req.query.product === undefined) {
     res.status(400).json({
-      errorMessage: "Please supply the query parameter of 'product' "
+      message: "Please supply the query parameter of 'product' "
     })
   } else if (req.query.market === undefined) {
     res
       .status(400)
-      .json({ errorMessage: "Please supply the query parameter of 'market' " })
+      .json({ message: "Please supply the query parameter of 'market' " })
   } else {
     next()
   }
 }
+//middleware for playground date range endpoint//
 function playgroundDR(req, res, next) {
   if (!req.query.hasOwnProperty('product')) {
-    res.status(400).json({ errorMessage: 'please supply product' })
+    res.status(400).json({ message: 'please supply product' })
   } else if (!req.query.hasOwnProperty('startDate')) {
-    res.status(400).json({ errorMessage: 'please supply startDate=YYYY-MM-DD' })
+    res.status(400).json({ message: 'please supply startDate=YYYY-MM-DD' })
   } else if (!req.query.hasOwnProperty('endDate')) {
-    res.status(400).json({ errorMessage: 'please supply endDate=YYYY-MM-DD' })
+    res.status(400).json({ message: 'please supply endDate=YYYY-MM-DD' })
   } else {
     next()
   }
 }
-
+//middleware for product via date range
 function queryProductDate(req, res, next) {
   if (req.query.product === undefined) {
     res.status(400).json({
-      errorMessage: "Please supply the query parameter of 'product' "
+      message: "Please supply the query parameter of 'product' "
     })
   } else if (req.query.startDate === undefined) {
     res.status(400).json({
-      errorMessage: "Please supply the query parameter of 'startDate' "
+      message: "Please supply the query parameter of 'startDate' "
     })
   } else if (req.query.endDate === undefined) {
     res
       .status(400)
-      .json({ errorMessage: "Please supply the query parameter of 'endDate' " })
+      .json({ message: "Please supply the query parameter of 'endDate' " })
   } else {
     next()
   }
@@ -92,7 +93,7 @@ function queryCurrency(req, res, next) {
     next()
   } else if (!supportedCurrencies.includes(currency.toUpperCase())) {
     res.status(400).json({
-      errorMessage: `Parameter 'currency' must be one of:  ${supportedCurrencies}`
+      message: `Parameter 'currency' must be one of:  ${supportedCurrencies}`
     })
   } else {
     req.currency = currency.toUpperCase()

@@ -11,8 +11,9 @@ module.exports = {
 
 // Grid table functions
 
-// Helper function with filter searches for client side
-// Flexible by allowing user to select whichever query they want.
+// Helper function with filter searches for data table on client side
+// Flexible by allowing user to select whichever query they want
+// Cursor based pagination implemented for data table on client side
 
 async function getSautiDataClient(query, csvLimit) {
   let { startDate, endDate } = query
@@ -190,6 +191,7 @@ async function getSautiDataClient(query, csvLimit) {
     count: totalCount
   }
 }
+
 function marketList() {
   return DBSt('platform_market_prices2')
     .distinct('market')
@@ -215,6 +217,7 @@ function paggList() {
     .distinct('product_agg')
     .orderBy('product_agg')
 }
+// fn for serving up lists  to the grid filter inputs //
 function mcpList() {
   const marketQuery = marketList()
   const countryQuery = countryList()
@@ -325,7 +328,7 @@ function getPlay(query) {
     .limit(1)
 }
 
-
+// get price of product over a range of dates for the playground - limited by 1 //
 function getProductPriceRangePlay({ product, startDate, endDate }) {
 
   return DBSt('platform_market_prices2')
@@ -335,6 +338,7 @@ function getProductPriceRangePlay({ product, startDate, endDate }) {
     .limit(1)
 }
 
+// get price of product in a specific market for playground //
 function getPMPlay(query) {
   const { product, market } = query
   let queryOperation = DBSt('platform_market_prices2')

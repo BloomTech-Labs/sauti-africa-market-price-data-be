@@ -37,7 +37,7 @@ server.use("/sauti/client", clientRouter);
 
 server.get("/", (req, res) => {
   res.send(
-    "<h1>Welcome to Sauti Africa Market Price API</h1><a href='https://documenter.getpostman.com/view/8666055/SVtZvkxB?version=latest#379d2949-1e20-47be-9f13-9d142581a8c9'>Check out the API Docs on how to use this API</a>"
+    "<h1>Welcome to Sauti Africa Market Price API</h1><a href='https://price-api.sautiafrica.org/docs'>Check out the API Docs on how to use this API</a>"
   );
 });
 
@@ -88,7 +88,7 @@ async function getThings(cursor) {
 
   return { records: entries, next: next, prev: prev };
 }
-
+// playground route for faux filter //
 server.get("/sauti", (req, res) => {
   Client.getPlay(req.query)
     .then(response => {
