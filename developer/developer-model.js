@@ -9,7 +9,10 @@ module.exports = {
 }
 
 // Helper function with filter searches for developer
-// Notes: Flexible by allowing user to select whichever query they want.
+// Notes: 
+// Flexible by allowing user to select whichever query they want
+// Used whereIn in the if/else if statements so that the query can be turned into an array
+// if/else if statements used for countries, markets, etc. for single selection and multiple selection
 
 async function getSautiData(query) {
   let { startDate, endDate, count } = query

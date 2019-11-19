@@ -1,3 +1,6 @@
+//We have created several custom middleware to detect correct keys when req.query is passed
+//Below are many functions which can assist req.query to handle errors better
+
 module.exports = {
   queryProduct,
   queryProductMarket,
@@ -6,7 +9,7 @@ module.exports = {
   queryCurrency,
   playgroundDR
 }
-
+//Detecting whether key of req.query object has 'product' and is not empty
 function queryProduct(req, res, next) {
   if (req.query.product === undefined) {
     res.status(400).json({
@@ -17,6 +20,7 @@ function queryProduct(req, res, next) {
   }
 }
 
+// middleware for developer route for when max of records is reached and when count is set higher than 30 records
 function queryCountPage(req, res, next) {
   if (req.query.count > 500) {
     req.message = 'Each page can have maximum of 500 records'
@@ -75,6 +79,7 @@ function queryProductDate(req, res, next) {
   }
 }
 
+//Detects the type of currency requested to be converted
 function queryCurrency(req, res, next) {
   const supportedCurrencies = [
     'MWK',
