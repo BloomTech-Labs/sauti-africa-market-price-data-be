@@ -89,7 +89,7 @@ function queryCurrency(req, res, next) {
   const { currency } = req.query
 
   if (currency === undefined) {
-    req.currency = 'USD'
+    req.currency = 'USD' // Set USD as default for currency conversion if no 'currency' parameter supplied
     next()
   } else if (!supportedCurrencies.includes(currency.toUpperCase())) {
     res.status(400).json({
@@ -100,21 +100,3 @@ function queryCurrency(req, res, next) {
     next()
   }
 }
-
-// const validParams = ["country", "currency"];
-// const query = {
-//   country: "Uganda",
-//   currency: "UGX",
-//   inflationRate: "0.2"
-// };
-// const filterQuery = (query, validParams) => {
-//   let result = {};
-//   for (let key in query) {
-//     if (query.hasOwnProperty(key) && validParams.includes(key)) {
-//       result[key] = query[key];
-//     }
-//   }
-//   return result;
-// };
-// const whereParams = filterQuery(query, validParams);
-// console.log(whereParams);
