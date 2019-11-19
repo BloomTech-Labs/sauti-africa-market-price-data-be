@@ -18,11 +18,11 @@ const Client = require('./client-model.js')
 const convertCurrencies = require('../currency')
 
 router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
-  const message = req.message && req.message.replace('50', '30')
+  const message = req.message
   req.query.count = 30
   Client.getSautiDataClient(req.query)
     .then(records => {
-      convertCurrencies(records, req.currency)
+      convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
         .then(converted => {
           res.status(200).json({
             warning: converted.warning,
@@ -44,16 +44,8 @@ router.get('/', tokenMiddleware, queryCurrency, (req, res) => {
     })
 })
 
-router.get('/lists', (req, res) => {
-  Client.getListsOfThings(req.query.list)
-    .then(records => {
-      res.status(200).json(records)
-    })
-    .catch(error => {
-      console.log(error)
-      res.status(500).send(error.message)
-    })
-})
+
+// route that serves up frontend grid inputs //
 router.get('/superlist', (req, res) => {
   Client.mcpList()
     .then(records => {
@@ -64,38 +56,42 @@ router.get('/superlist', (req, res) => {
       res.status(500).send(err.message)
     })
 })
-function apiKeyFn() {
-  return db('apiKeys')
-}
-router.get('/users', (req, res) => {
-  apiKeyFn()
-    .then(records => {
-      res.status(200).json(records)
-    })
-    .catch(err => {
-      console.log(err.message)
-      res.status(500).send(err.message)
-    })
-})
+
 //playground routes//
 //product date range//
 router.get('/playground/date', playgroundDR, (req, res) => {
   Client.getProductPriceRangePlay(req.query)
-    .then(records => {
-      res.status(200).json(records)
-    })
-    .catch(err => {
-      console.log(err.message)
-      res.status(500).json(err)
-    })
+  .then(record => {
+    if(record[0]){
+      res.status(200).json(record)
+    } else {
+      res.status(404).json({
+        message:
+          "The records for that product and date-range combination doesn't exist, please check spelling for product or specify new date range"
+      })
+    }
+  })
+
+  .catch(err => {
+    console.log(err.message)
+    res.status(500).send(err.message)
+  })
 })
 
 //get latest price of product in market for playground//
 router.get('/playground/latest', queryProductMarket, (req, res) => {
   Client.getPMPlay(req.query)
-    .then(records => {
-      res.status(200).json(records)
+    .then(record => {
+      if(record[0]){
+        res.status(200).json(record)
+      } else {
+        res.status(404).json({
+          message:
+            "That product and market combination doesn't exist, please check spelling and list of products and markets"
+        })
+      }
     })
+
     .catch(err => {
       console.log(err.message)
       res.status(500).send(err.message)
@@ -107,7 +103,7 @@ router.get('/playground/latest', queryProductMarket, (req, res) => {
 router.get('/export', (req, res) => {
   Client.getSautiDataClient(req.query, 10000000000)
     .then(records => {
-      convertCurrencies(records, req.currency)
+      convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
         .then(converted => {
           const data = {
             warning: converted.warning,
