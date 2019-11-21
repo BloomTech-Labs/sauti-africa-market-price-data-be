@@ -1,8 +1,8 @@
 # API Documentation
 
-#### 1️⃣ Backend deployed at [heroku](https://sauti-africa-market-master.herokuapp.com/) <br> <br> View the API Docs & Examples at [Postman](https://documenter.getpostman.com/view/8666055/SVtZvkxB?version=latest#379d2949-1e20-47be-9f13-9d142581a8c9)
+#### Backend deployed at [heroku](https://sauti-africa-market-master.herokuapp.com/) <br> <br> View the API Docs & Examples at [Postman](https://price-api.sautiafrica.org/docs
 
-## 1️⃣ Getting started
+## Getting started
 
 To get the server running locally:
 
@@ -10,17 +10,17 @@ To get the server running locally:
 - **npm i** to install all required dependencies
 - **npm run server** to start the local server
 - **npm run test** to start server using testing environment
+- **install redis** to allow API Keys to be processed. Please install redis from [here](https://redis.io/)
+- Acquire the correct .env file to ensure proper operation
 - Acquire API key and pass it as header to any available routes of developer route. Consult API Docs on Postman(see above)
 
-### Backend framework goes here
-
-🚫 Why did you choose this framework?
+### NodeJS/Express Server
 
 - We chose Node.js/Express because we were familiar with the tech and could leverage the use of middleware.
 - We chose knex as our query builder because we were familiar with it and were able to build the appropriate queries very quickly.
 - Custom Validation Middleware to ensure query parameters are received correctly and throw meaningful errors.
 
-## 2️⃣ Endpoints
+## Endpoints
 
 #### Developer Route
 
@@ -39,7 +39,11 @@ To get the server running locally:
 
 | Method | Endpoint        | Access Control | Description                                                                                    |
 | ------ | --------------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| GET    | `/sauti/client` | all users      | Performs Big query as Developer Filter (This endpoint will be expanded for Release Cycle V1.2) |
+| GET    | `/sauti/client` | all FE users      | Performs query filtering with pagination for the data grid |
+| GET    | `/sauti/client/superlist` | all FE users      | Performs queries to serve  up to the grid for filter inputs |
+| GET    | `/sauti/client/playground/date` | all FE users      | Performs query for a product and date range which returns 1 record |
+| GET    | `/sauti/client/playground/latest` | all FE users      | Performs query for latest price by product and market which returns 1 record |
+| GET    | `/sauti/` | all FE users      | Playground filter endpoint which returns 1 record |
 
 #### API KEY Route
 
@@ -51,7 +55,7 @@ To get the server running locally:
 
 🌴Database is provided by our Stakeholder from Sauti Africa
 
-#### 2️⃣ Market Price Table
+####  Market Price Table
 
 ---
 
@@ -86,7 +90,7 @@ To get the server running locally:
 }
 ```
 
-## 2️⃣ Actions
+##  Actions
 
 `getSautiData(query)` -> Returns all sauti data that can be filtered with queries for countries, markets, and products.
 
@@ -98,7 +102,7 @@ To get the server running locally:
 
 `getProductPriceRange(product, startDate, endDate, count, page` -> Returns product price over a range of dates.
 
-## 3️⃣ Environment Variables
+## Environment Variables
 
 In order for the app to function correctly, the user must set up their own environment variables.
 Please contact a member of the team to acquire them.

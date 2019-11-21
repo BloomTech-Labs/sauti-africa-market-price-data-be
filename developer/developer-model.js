@@ -9,7 +9,10 @@ module.exports = {
 };
 
 // Helper function with filter searches for developer
-// Notes: Flexible by allowing user to select whichever query they want.
+// Notes: 
+// Flexible by allowing user to select whichever query they want
+// Used whereIn in the if/else if statements so that the query can be turned into an array
+// if/else if statements used for countries, markets, etc. for single selection and multiple selection
 
 async function getSautiData(query) {
   let { startDate, endDate, count } = query;
@@ -189,7 +192,7 @@ async function getSautiData(query) {
     count: totalCount
   };
 }
-
+// fn to get the latest price for a product across all markets //
 function latestPriceAcrossAllMarkets(query) {
   const { product } = query;
   return DBSt.schema.raw(
@@ -207,7 +210,7 @@ function latestPriceAcrossAllMarkets(query) {
     [product, product]
   );
 }
-
+// fn to get the latest price for a product by market //
 function latestPriceByMarket(query) {
   const { product, market } = query;
   let queryOperation = DBSt("platform_market_prices2");
@@ -228,7 +231,7 @@ function latestPriceByMarket(query) {
     .orderBy("date", "desc")
     .limit(1);
 }
-
+// fn that returns a list of items, markets by default //
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt("platform_market_prices2");
   if (query === undefined) {
@@ -247,7 +250,7 @@ function getListsOfThings(query, selector) {
       return queryOperation.distinct("market").orderBy("market");
   }
 }
-
+// fn that returns records for a product via date range, with pagination //
 async function getProductPriceRange(query) {
   let { product, startDate, endDate, count } = query;
 

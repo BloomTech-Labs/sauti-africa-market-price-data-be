@@ -18,7 +18,7 @@ router.get(
               "Records don't exist here, change the query parameters or change page no. "
           })
         } else {
-          convertCurrencies(response, req.currency)
+          convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
               converted.count
                 ? res.status(200).json({
@@ -65,7 +65,7 @@ router.get(
               "The product entered doesn't exist in the database, please check the list of available products"
           })
         } else {
-          convertCurrencies(records[0], req.currency)
+          convertCurrencies(records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
               res.status(200).json({
                 warning: converted.warning,
@@ -96,7 +96,7 @@ router.get(
     Developer.latestPriceByMarket(req.query)
       .then(record => {
         if (record) {
-          convertCurrencies(record, req.currency)
+          convertCurrencies(record, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
               res.status(200).json({
                 warning: converted.warning,
@@ -145,7 +145,7 @@ router.get(
   (req, res) => {
     Developer.getProductPriceRange(req.query)
       .then(records => {
-        convertCurrencies(records, req.currency)
+        convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
           .then(converted => {
             converted.count
               ? res.status(200).json({
