@@ -37,13 +37,13 @@ To get the server running locally:
 
 #### Client Route
 
-| Method | Endpoint        | Access Control | Description                                                                                    |
-| ------ | --------------- | -------------- | ---------------------------------------------------------------------------------------------- |
-| GET    | `/sauti/client` | all FE users      | Performs query filtering with pagination for the data grid |
-| GET    | `/sauti/client/superlist` | all FE users      | Performs queries to serve  up to the grid for filter inputs |
-| GET    | `/sauti/client/playground/date` | all FE users      | Performs query for a product and date range which returns 1 record |
-| GET    | `/sauti/client/playground/latest` | all FE users      | Performs query for latest price by product and market which returns 1 record |
-| GET    | `/sauti/` | all FE users      | Playground filter endpoint which returns 1 record |
+| Method | Endpoint                          | Access Control | Description                                                                  |
+| ------ | --------------------------------- | -------------- | ---------------------------------------------------------------------------- |
+| GET    | `/sauti/client`                   | all FE users   | Performs query filtering with pagination for the data grid                   |
+| GET    | `/sauti/client/superlist`         | all FE users   | Performs queries to serve up to the grid for filter inputs                   |
+| GET    | `/sauti/client/playground/date`   | all FE users   | Performs query for a product and date range which returns 1 record           |
+| GET    | `/sauti/client/playground/latest` | all FE users   | Performs query for latest price by product and market which returns 1 record |
+| GET    | `/sauti/`                         | all FE users   | Playground filter endpoint which returns 1 record                            |
 
 #### API KEY Route
 
@@ -55,7 +55,7 @@ To get the server running locally:
 
 🌴Database is provided by our Stakeholder from Sauti Africa
 
-####  Market Price Table
+#### Market Price Table
 
 ---
 
@@ -90,7 +90,7 @@ To get the server running locally:
 }
 ```
 
-##  Actions
+## Actions
 
 `getSautiData(query)` -> Returns all sauti data that can be filtered with queries for countries, markets, and products.
 
