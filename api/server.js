@@ -53,4 +53,8 @@ server.get('/sauti', (req, res) => {
     })
 })
 
+// TODO: CLEAN UP TEMP CODE AFTER FINISHED WRITING MIDDLEWARE FOR API
+const managementToken = require('../middleware/rules/API-Token.js')
+managementToken();
+
 module.exports = server
