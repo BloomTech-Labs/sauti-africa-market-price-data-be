@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
-const compression = require('compression')
+const compression = require('compression') // Compression in Node.js and Express decreases the downloadable amount of data that’s served to users. Through the use of this compression, we can improve the performance of our Node.js applications as our payload size is reduced drastically.
 const server = express()
 
 const Client = require('../client/client-model')

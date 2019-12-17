@@ -43,6 +43,7 @@
     "pg": "^7.12.1",
     "pm2": "^4.1.2",
     "redis": "^2.8.0",
+    "request": "^2.88.0",
     "uuid-apikey": "^1.4.4"
   },
   "devDependencies": {
