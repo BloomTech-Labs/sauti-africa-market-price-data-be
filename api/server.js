@@ -14,9 +14,9 @@ const apiLimiter = require('../middleware/api-limiter-middleware')
 const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
 const tokenmiddleware = require('../middleware/token-middleware')
-const rateLimit = require("express-rate-limit")
+const rateLimit = require("express-rate-limit") //throttling package
 
-//implements the rate limit 
+//Initialize the rate limit 
 const apiThrottler = rateLimit({
   windowsMs: .1 * 60 * 1000,
   max: 100
