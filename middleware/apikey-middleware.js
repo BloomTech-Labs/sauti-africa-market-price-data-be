@@ -5,6 +5,9 @@ module.exports = async (req, res, next) => {
   const { key } = req.headers
 
   let validKey = null
+  let userId = null
+  let hashedKey
+  //get the user_id along with the valid key and put user_id in req
 
   const keyCandidates = await db('apiKeys')
 
@@ -16,10 +19,17 @@ module.exports = async (req, res, next) => {
       //   .where({ key: db.raw("digest(?, 'md5')", [key]) })
       //   .first()
       for (candidate of keyCandidates) {
-        // const k = await bcrypt.compare(key, candidate.key) //uncomment this line after local testing
+        const k = await bcrypt.compare(key, candidate.key)
 
         if (k) {
-        // if (key === '12345'){  //remove this line and uncomment line 21
+          //set hashedKey for user_id lookup
+          hashedKey = candidate.key
+          
+        //db lookup the user_id based on the key
+        userId = await db('apiKeys')
+        .select('user_id')
+        .where({key:hashedKey}) 
+
         validKey = key
           break
         }

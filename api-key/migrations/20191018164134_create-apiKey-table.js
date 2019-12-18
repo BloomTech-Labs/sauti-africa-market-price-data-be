@@ -10,7 +10,7 @@ exports.up = function(knex) {
       .unique()
       .notNullable()
     tbl
-      .date('reset_start')
+      .date('reset_date')
       .notNullable()
   })
 }
