@@ -26,7 +26,7 @@ router.post('/private', jwtCheck, async (req, res) => {
         await db('apiKeys')
           .where({ user_id: id })
           //update table with key hash and day
-          .update({ key: hash, date_generated:dateDay})
+          .update({ key: hash, reset_start:dateDay})
 
         res.status(200).json({ existed: true, key: key.apiKey })
       } catch (err) {
