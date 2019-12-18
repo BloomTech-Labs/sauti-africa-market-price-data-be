@@ -18,7 +18,7 @@ const options = {
 
 // * RETRIEVE TOKEN FOR API MANAGEMENT &
 // * DYNAMIC USER GET REQUEST FOR USERS REQUESTING API KEY
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
   let apiToken
 
   // * SET TOKEN FOR AUTHORIZED API USAGE
@@ -56,4 +56,5 @@ module.exports = (req, res, next) => {
       })
     }
   })
+  next();
 }
