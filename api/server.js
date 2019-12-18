@@ -53,4 +53,8 @@ server.get('/sauti', (req, res) => {
     })
 })
 
+// TODO: CLEAN UP TEMP CODE AFTER FINISHED WRITING MIDDLEWARE FOR API
+const roles = require('../middleware/rules/rules-middleware')
+roles();
+
 module.exports = server
