@@ -40,19 +40,22 @@ module.exports = async (req, res, next) => {
       }
 
       request(managementAPI, async (error, response, body) => {
+        const user = await JSON.parse(body);
 
-        // ! LOG INFORMATION BELOW
-        if (error) throw new Error(error)
-        // console.log('BODY REQUEST', body)
-
-        const user = body
-        const addRolesToUser = function(user) {
+        const addRolesToUser = async (user) => {
           if (user.email.includes('@sautiafrica.org')) {
-            user.app_metadata.role = 'admin'
+            user.role = "admin";
           } else {
-            user.app_metadata.role = 'freeUser'
+            user.role = "freeUser";
           }
         }
+
+        if (error) throw new Error(error)
+
+        addRolesToUser(user);
+
+        // ! LOG INFORMATION BELOW
+        // console.log('BODY REQUEST', user)
       })
     }
   })
