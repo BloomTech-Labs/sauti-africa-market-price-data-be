@@ -16,6 +16,12 @@ const clientRouter = require('../client/client-router.js')
 const tokenmiddleware = require('../middleware/token-middleware')
 const rateLimit = require("express-rate-limit")
 
+//implements the rate limit 
+const apiThrottler = rateLimit({
+  windowsMs: .1 * 60 * 1000,
+  max: 100
+});
+
 //Initialize Moesif and set up the middleware
 const moesifExpress = require('moesif-express')
 const moesifMiddleware = moesifExpress({
@@ -54,10 +60,6 @@ server.get('/sauti', (req, res) => {
     })
 })
 
-//implements the rate limit 
-const apiThrottler = rateLimit({
-  windowsMs: .1 * 60 * 1000,
-  max: 100
-});
+
 
 module.exports = server
