@@ -9,10 +9,9 @@ const CALL_LIMIT = 10000 // change as needed
 
 module.exports = async (req, res, next) => {
 
-
-
-  const { key } = req
-  const role = 'freeUser'; //testing, remove this
+  const { key } = req.headers;
+  const { role } = req.headers;
+  // const role = 'freeUser'; //testing, remove this
 
   if (role === 'freeUser') {
     const calls = await client.get(key) // Retrieve key usage from redis cache
