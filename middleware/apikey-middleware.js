@@ -18,8 +18,8 @@ module.exports = async (req, res, next) => {
       for (candidate of keyCandidates) {
         // const k = await bcrypt.compare(key, candidate.key) //uncomment this line after local testing
 
-        // if (k) {
-        if (key === '12345'){  //remove this line and uncomment line 21
+        if (k) {
+        // if (key === '12345'){  //remove this line and uncomment line 21
         validKey = key
           break
         }
