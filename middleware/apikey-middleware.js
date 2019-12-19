@@ -23,13 +23,13 @@ module.exports = async (req, res, next) => {
           //set hashedKey for user_id lookup
           hashedKey = candidate.key
           
-        //db lookup the user_id based on the key
-        userId = await db('apiKeys')
-        .select('user_id')
-        .where({key:hashedKey}) 
+          //db lookup the user_id based on the key
+          userId = await db('apiKeys')
+          .select('user_id')
+          .where({key:hashedKey}) 
 
-        validKey = key
-          break
+          validKey = key
+            break
         }
       }
     } catch (err) {
