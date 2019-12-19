@@ -10,7 +10,7 @@ const apiAuthenticator = require('../middleware/apikey-middleware')
 const apiLimiter = require('../middleware/api-limiter-middleware')
 const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
-const userRoleRouter = require('../routes/userRoles')
+const userRoleRouter = require('../routes/users/userRoles')
 
 //* Initialize Moesif and set up the middleware
 const moesifExpress = require('moesif-express')

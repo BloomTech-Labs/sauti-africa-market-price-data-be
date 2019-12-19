@@ -44,6 +44,7 @@
     "pm2": "^4.1.2",
     "redis": "^2.8.0",
     "request": "^2.88.0",
+    "request-promise": "^4.2.5",
     "uuid-apikey": "^1.4.4"
   },
   "devDependencies": {
