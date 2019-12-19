@@ -9,8 +9,9 @@ exports.up = function(knex) {
       .text('user_id')
       .unique()
       .notNullable()
+      //reset_date stores the date as milliseconds as an integer
     tbl
-      .date('reset_date')
+      .integer('reset_date')
       .notNullable()
   })
 }

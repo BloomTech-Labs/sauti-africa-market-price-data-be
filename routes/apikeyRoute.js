@@ -34,7 +34,11 @@ router.post('/private', jwtCheck, async (req, res) => {
       }
     } else {
       try {
-        await db('apiKeys').insert({ key: hash, user_id: id })
+        await db('apiKeys').insert({ 
+          key: hash, 
+          user_id: id, 
+          reset_date:dateMilliseconds
+        })
 
         res.status(200).json({ existed: false, key: key.apiKey })
       } catch (err) {

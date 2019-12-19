@@ -7,8 +7,6 @@ module.exports = async (req, res, next) => {
   let validKey = null
   let userId = null
   let hashedKey
-  //get the user_id along with the valid key and put user_id in req
-
   const keyCandidates = await db('apiKeys')
 
   /*=== checks validity of key ===*/
@@ -42,6 +40,7 @@ module.exports = async (req, res, next) => {
   /*=== sends key on req object to apiLim middleware ===*/
   if (validKey) {
     req.key = validKey
+    req.userId = userId
     next()
   } else {
     res.status(403).json({

@@ -16,35 +16,55 @@ module.exports = async (req, res, next) => {
   const { userId } = req;
   // const role = 'freeUser'; //testing, remove this
 
-  //retrieve user_id
-
-
-  //retrieve reset_start_date from api-key table
-
-
   if (role === 'freeUser') {
-    const calls = await client.get(key) // Retrieve key usage from redis cache
 
-    if (calls) {
-      if (calls < CALL_LIMIT) {
-        const newCalls = Number(calls) + 1
-    
-        client.set(key, newCalls) // Update # of calls in redis cache
-        // console.log(await client.get(key)) //delete this after testing
+    //retrieve reset_start_date from api-key table
+      const resetStart = await db('apiKeys')
+      .select('reset_date')
+      .where({user_id:userId});
+
+    //generate todays date in milliseconds
+      const currentDate = new Date();
+      const currentDateMS = currentDate.getTime();
+
+    //calculate the elapsed days
+      const currentPeriod = (currentDateMS - resetStart)/(1000*60*60*24);
+
+
+    // test if the period exceeds 30 days. If so, reset the count in redis, update the reset_date to the current date in milliseconds 
+
+      if (currentPeriod > 30){
+        await client.set(key, 0);
+
+        await db('apiKeys')
+        .where({user_id:userId})
+        .update({reset_date:currentDateMS})
+      }
+
+    //retrieve count from redis
+      const calls = await client.get(key) // Retrieve key usage from redis cache
+
+
+    //enforce quotas
+      if (calls) {
+        if (calls < CALL_LIMIT) {
+          const newCalls = Number(calls) + 1
+      
+          client.set(key, newCalls) // Update # of calls in redis cache
+          // console.log(await client.get(key)) //delete this after testing
+          next()
+        } else
+          res.status(403).json({
+            message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls`
+          })
+      } else {
+        client.set(key, 0) // Create a new key in redis cache
         next()
-      } else
-        res.status(403).json({
-          message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls`
-        })
-    } else {
-      client.set(key, 0) // Create a new key in redis cache
-      next()
-    }
-  }
-  else {
+      }
+  } else {
     next()
   }
-}
+};
 
 
 /*
