@@ -7,6 +7,7 @@
     "server": "nodemon index.js",
     "dev": "nodemon index.js",
     "test": "jest --coverage --detectOpenHandles --forceExit",
+    "testWatch": "jest --watchAll",
     "start": "pm2-runtime index.js -i max",
     "format": "prettier --write \"**/*.{js,scss,css,html,json,md,less,tsx}\""
   },
@@ -55,5 +56,8 @@
     "prettier": "^1.18.2",
     "sqlite3": "^4.1.0",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
