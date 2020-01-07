@@ -6,10 +6,13 @@ const db = require('../api-key/dbConfig')
 
 client.get = promisify(client.get)
 
-const CALL_LIMIT = 10000 // change as needed
+// const CALL_LIMIT = 10000 // change as needed
+const CALL_LIMIT = 3 // test
 
 module.exports = async (req, res, next) => {
   //get api key and role and user_id from req/req headers
+
+  console.log(req.key);
   const { key } = req;
   const { role } = req.headers;
   const { userId } = req;
@@ -30,6 +33,7 @@ module.exports = async (req, res, next) => {
 
     //calculate the elapsed days
       const currentPeriod = (currentDateMS - resetStart)/(1000*60*60*24);
+      console.log(currentPeriod);
 
 
     // test if the period exceeds 30 days. If so, reset the count in redis, update the reset_date to the current date in milliseconds 
