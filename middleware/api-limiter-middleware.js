@@ -4,13 +4,12 @@ const client = require('../redis')
 const db = require('../api-key/dbConfig')
 
 
-
 client.get = promisify(client.get)
 
 const CALL_LIMIT = 10000 // change as needed
 
 module.exports = async (req, res, next) => {
-  //get api key and role from req headers
+  //get api key and role and user_id from req/req headers
   const { key } = req;
   const { role } = req.headers;
   const { userId } = req;
