@@ -27,7 +27,7 @@ module.exports = async (req, res, next) => {
           userId = await db('apiKeys')
           .select('user_id')
           .where({key:hashedKey}) 
-
+          console.log(`userID:`,userId[0].user_id)
           validKey = key
             break
         }
@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
   /*=== sends key on req object to apiLim middleware ===*/
   if (validKey) {
     req.key = validKey
-    req.userId = userId
+    req.userId = userId[0].user_id
     next()
   } else {
     res.status(403).json({

@@ -27,12 +27,15 @@ module.exports = async (req, res, next) => {
 
     //generate todays date in milliseconds
       const currentDate = new Date();
+      console.log(resetStart);
       console.log(currentDate);
       const currentDateMS = currentDate.getTime();
       console.log(currentDateMS);
 
     //calculate the elapsed days
-      const currentPeriod = (currentDateMS - resetStart)/(1000*60*60*24);
+      const elapsedDays = currentDateMS - resetStart;
+      console.log(elapsedDays);
+      const currentPeriod = elapsedDays/(1000*3600*24);
       console.log(currentPeriod);
 
 
