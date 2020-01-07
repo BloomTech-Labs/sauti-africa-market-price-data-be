@@ -6,8 +6,8 @@ const db = require('../api-key/dbConfig')
 
 client.get = promisify(client.get)
 
-// const CALL_LIMIT = 10000 // change as needed
-const CALL_LIMIT = 3 // test
+const CALL_LIMIT = 10000 // change as needed
+// const CALL_LIMIT = 3 // test
 
 module.exports = async (req, res, next) => {
   //get api key and role and user_id from req/req headers
@@ -27,13 +27,13 @@ module.exports = async (req, res, next) => {
 
     //generate todays date in milliseconds
       const currentDate = new Date();
-      console.log(resetStart);
+      console.log(resetStart[0].reset_date);
       console.log(currentDate);
       const currentDateMS = currentDate.getTime();
       console.log(currentDateMS);
 
     //calculate the elapsed days
-      const elapsedDays = currentDateMS - resetStart;
+      const elapsedDays = Number(currentDateMS) - Number(resetStart[0].reset_date);
       console.log(elapsedDays);
       const currentPeriod = elapsedDays/(1000*3600*24);
       console.log(currentPeriod);
@@ -57,9 +57,14 @@ module.exports = async (req, res, next) => {
       if (calls) {
         if (calls < CALL_LIMIT) {
           const newCalls = Number(calls) + 1
-      
+          
+
+
           client.set(key, newCalls) // Update # of calls in redis cache
-          // console.log(await client.get(key)) //delete this after testing
+
+
+          //TODO BAO PLEASE REMOVE THIS. THIS IS FOR TESTING:  
+          console.log(`Api Call Count`, await client.get(key))
           next()
         } else
           res.status(403).json({
