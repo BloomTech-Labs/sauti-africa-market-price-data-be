@@ -41,8 +41,10 @@ module.exports = async (req, res, next) => {
 
     // test if the period exceeds 30 days. If so, reset the count in redis, update the reset_date to the current date in milliseconds 
 
+    //TODO MATT change redis key:values to userId:count (instead of key:count)
+
       if (currentPeriod > 30){
-        await client.set(key, 0);
+        await client.set(userId, 1);
 
         await db('apiKeys')
         .where({user_id:userId})
@@ -50,7 +52,7 @@ module.exports = async (req, res, next) => {
       }
 
     //retrieve count from redis
-      const calls = await client.get(key) // Retrieve key usage from redis cache
+      const calls = await client.get(userId) // Retrieve key usage from redis cache
 
 
     //enforce quotas
@@ -60,18 +62,18 @@ module.exports = async (req, res, next) => {
           
 
 
-          client.set(key, newCalls) // Update # of calls in redis cache
+          client.set(userId, newCalls) // Update # of calls in redis cache
 
 
           //TODO BAO PLEASE REMOVE THIS. THIS IS FOR TESTING:  
-          console.log(`Api Call Count`, await client.get(key))
+          console.log(`Api Call Count`, await client.get(userId))
           next()
         } else
           res.status(403).json({
-            message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls`
+            message: `The key ${key} associated with ${userId} has exceeded the call limit of ${CALL_LIMIT} calls`
           })
       } else {
-        client.set(key, 0) // Create a new key in redis cache
+        client.set(userId, 1) // Create a new key in redis cache
         next()
       }
   } else {
