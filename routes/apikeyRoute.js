@@ -20,11 +20,22 @@ router.post('/private', jwtCheck, async (req, res) => {
     .where({ user_id: id })
     .first()
 
+/* 
+TODO: MATT -- Disallow generation of unlimited API keys 
+  1) Keys are stored in hashed form, which cannot be unhashed. 
+  2) Alternate method: 
+    * Get the users email using Bao's auth0 middleware, send post request with auth0|user_id to retrieve user object --> extract email
+    * On API key generation, we will use sendmail or nodemailer to send the unhashed api key to the registered email of the user using the sautimarketprices@gmail.com account as smtp. Sauti can change this to an organization email at a later time, or future cohorts can implement sendgrid/mailchimp/alternate solution. 
+    * Check the apikey table to see if user_id is present. 
+    * if present, return response message saying that an API key exists
+*/
+
   bcrypt.hash(key.apiKey, 10, async (_err, hash) => {
     if (user) {
       try {
         await db('apiKeys')
           .where({ user_id: id })
+          .select()
           //update table with key hash and day
           .update({ key: hash, reset_date:dateMilliseconds})
 
