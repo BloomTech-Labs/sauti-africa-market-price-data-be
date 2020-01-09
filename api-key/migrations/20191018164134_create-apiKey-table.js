@@ -9,9 +9,14 @@ exports.up = function(knex) {
       .text('user_id')
       .unique()
       .notNullable()
+      //reset_date stores the date as milliseconds as an integer
+    tbl
+      .integer('reset_date')
+      .notNullable()
   })
 }
 
 exports.down = function(knex) {
   return knex.schema.dropTableIfExists('apiKeys')
 }
+

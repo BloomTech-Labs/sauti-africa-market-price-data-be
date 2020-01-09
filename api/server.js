@@ -11,8 +11,15 @@ const apiLimiter = require('../middleware/api-limiter-middleware')
 const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
 const userRoleRouter = require('../routes/users/userRoles')
+const rateLimit = require("express-rate-limit") //throttling package
 
-//* Initialize Moesif and set up the middleware
+//Initialize the rate limit 
+const apiThrottler = rateLimit({
+  windowsMs: .1 * 60 * 1000,
+  max: 100
+});
+
+//Initialize Moesif and set up the middleware
 const moesifExpress = require('moesif-express')
 const moesifMiddleware = moesifExpress({
   applicationId: process.env.MOESIF_ID || undefined,
@@ -34,8 +41,8 @@ server.use(express.json())
 // * ROUTES BELOW
 server.use('/api/apikeyRoute', apikeyRoute)
 server.use('/api/users', userRoleRouter)
-server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
-server.use('/sauti/client', clientRouter)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter, apiThrottler)
+server.use('/sauti/client', clientRouter, apiThrottler)
 
 // * LANDING PAGE FOR BE
 server.get('/', (req, res) => {
