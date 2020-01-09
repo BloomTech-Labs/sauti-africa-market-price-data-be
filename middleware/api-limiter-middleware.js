@@ -37,12 +37,13 @@ module.exports = async (req, res, next) => {
       console.log(elapsedDays);
       const currentPeriod = elapsedDays/(1000*3600*24);
       console.log(currentPeriod);
+      const remainingDays = 30 - currentPeriod;
 
 
     // test if the period exceeds 30 days. If so, reset the count in redis, update the reset_date to the current date in milliseconds 
 
       if (currentPeriod > 30){
-        await client.set(key, 0);
+        await client.set(userId, 1);
 
         await db('apiKeys')
         .where({user_id:userId})
@@ -50,7 +51,7 @@ module.exports = async (req, res, next) => {
       }
 
     //retrieve count from redis
-      const calls = await client.get(key) // Retrieve key usage from redis cache
+      const calls = await client.get(userId) // Retrieve key usage by userId from redis cache
 
 
     //enforce quotas
@@ -58,20 +59,30 @@ module.exports = async (req, res, next) => {
         if (calls < CALL_LIMIT) {
           const newCalls = Number(calls) + 1
           
-
-
-          client.set(key, newCalls) // Update # of calls in redis cache
-
+          client.set(userId, newCalls) // Update # of calls in redis cache
 
           // TODO: WRITE TO TABLE TO RECORD COUNT DATA
-          console.log(`Api Call Count`, await client.get(key))
+          console.log(`Api Call Count`, await client.get(userId))
+
+
+          // Send updated call count to FE in response body. 
+          let currentCount = await client.get(userId)
+         
+          //pass count 
+          req.count = currentCount;
+
+          // ! BACKUP SOLUTION FOR COUNT DATA
+          // res.status(200).json({
+          //   apiCallCount: currentCount
+          // })
           next()
         } else
+          // return status notifying user they have exceeded count and days before reset. 
           res.status(403).json({
-            message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls`
+            message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls. Call limit will reset in ${remainingDays} days.`
           })
       } else {
-        client.set(key, 0) // Create a new key in redis cache
+        client.set(userId, 1) // Create a new key in redis cache
         next()
       }
   } else {

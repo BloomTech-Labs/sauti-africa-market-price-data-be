@@ -20,7 +20,7 @@ const rateLimit = require("express-rate-limit") //throttling package
 //Initialize the rate limit 
 const apiThrottler = rateLimit({
   windowsMs: .1 * 60 * 1000,
-  max: 100
+  max: 20
 });
 
 //Initialize Moesif and set up the middleware
@@ -32,16 +32,15 @@ const moesifMiddleware = moesifExpress({
 
 //Server uses middleware to add functionality
 server.use(moesifMiddleware)
-
+server.use(apiThrottler)
 server.use(compression())
 server.use(helmet())
 server.use(cors())
 server.use(express.json())
 
 server.use('/api/apikeyRoute', apikeyRoute)
-
-server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter, apiThrottler)
-server.use('/sauti/client', clientRouter, apiThrottler)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
+server.use('/sauti/client', clientRouter)
 
 server.get('/', (req, res) => {
   res.send(

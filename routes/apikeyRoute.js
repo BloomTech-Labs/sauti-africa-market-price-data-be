@@ -13,7 +13,7 @@ router.post('/private', jwtCheck, async (req, res) => {
 
   //generate new date to be written to table
   const date = new Date();
-  //get the exact date (as a number, ie if date is 12/01/2019, getDate() returns 01)
+  //get the exact date in milliseconds
   const dateMilliseconds = date.getTime();
 
   const user = await db('apiKeys')
@@ -25,9 +25,8 @@ router.post('/private', jwtCheck, async (req, res) => {
       try {
         await db('apiKeys')
           .where({ user_id: id })
-          //update table with key hash and day
-          .update({ key: hash, reset_date:dateMilliseconds})
-
+          //update table with key hash. Don't reset reset_date.
+          .update({ key: hash})
         res.status(200).json({ existed: true, key: key.apiKey })
       } catch (err) {
         console.log(err)
@@ -39,7 +38,6 @@ router.post('/private', jwtCheck, async (req, res) => {
           user_id: id, 
           reset_date:dateMilliseconds
         })
-
         res.status(200).json({ existed: false, key: key.apiKey })
       } catch (err) {
         console.log(err)

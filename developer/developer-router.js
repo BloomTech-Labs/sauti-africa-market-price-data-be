@@ -4,6 +4,8 @@ const Developer = require('./developer-model.js')
 const router = express.Router()
 const convertCurrencies = require('../currency')
 
+// { apiCount: parseInt(req.count) }
+
 // Giant filter router
 router.get(
   '/filter',
@@ -14,6 +16,7 @@ router.get(
       .then(response => {
         if (!response.records || response.records.length < 1) {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "Records don't exist here, change the query parameters or change page no. "
           })
@@ -22,6 +25,7 @@ router.get(
             .then(converted => {
               converted.count
                 ? res.status(200).json({
+                    apiCount: parseInt(req.count),
                     warning: converted.warning,
                     message: req.message,
                     records: converted.data,
@@ -31,6 +35,7 @@ router.get(
                     pageCount: converted.count[0]['count(*)']
                   })
                 : res.status(200).json({
+                    apiCount: parseInt(req.count),
                     warning: converted.warning,
                     message: req.message,
                     records: converted.data,
@@ -61,6 +66,7 @@ router.get(
       .then(records => {
         if (!records[0] || records[0].length < 1) {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "The product entered doesn't exist in the database, please check the list of available products"
           })
@@ -68,6 +74,7 @@ router.get(
           convertCurrencies(records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
               res.status(200).json({
+                apiCount: parseInt(req.count),
                 warning: converted.warning,
                 message: req.message,
                 records: converted.data,
@@ -99,6 +106,7 @@ router.get(
           convertCurrencies(record, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
               res.status(200).json({
+                apiCount: parseInt(req.count),
                 warning: converted.warning,
                 message: req.message,
                 record: converted.data,
@@ -110,6 +118,7 @@ router.get(
             })
         } else {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "That product and market combination doesn't exist, please check spelling and list of products and markets"
           })
@@ -126,7 +135,10 @@ router.get(
 router.get('/lists', (req, res) => {
   Developer.getListsOfThings(req.query.list)
     .then(records => {
-      res.status(200).json(records)
+      res.status(200).json({
+        apiCount: parseInt(req.count),
+        records
+      })
     })
     .catch(error => {
       console.log(error)
@@ -149,6 +161,7 @@ router.get(
           .then(converted => {
             converted.count
               ? res.status(200).json({
+                  apiCount: parseInt(req.count),
                   warning: converted.warning,
                   message: req.message,
                   records: converted.data,
@@ -158,6 +171,7 @@ router.get(
                   pageCount: converted.count[0]['count(*)']
                 })
               : res.status(200).json({
+                  apiCount: parseInt(req.count),
                   warning: converted.warning,
                   message: req.message,
                   records: converted.data,
