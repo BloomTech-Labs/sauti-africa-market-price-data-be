@@ -15,8 +15,8 @@ const rateLimit = require("express-rate-limit") //throttling package
 
 //Initialize the rate limit 
 const apiThrottler = rateLimit({
-  windowsMs: .1 * 60 * 1000,
-  max: 100
+  windowsMs: 1 * 60 * 1000,
+  max: 20
 });
 
 //Initialize Moesif and set up the middleware
@@ -26,6 +26,7 @@ const moesifMiddleware = moesifExpress({
   logBody: true
 })
 
+
 // TODO: POSSIBL CODE CLEANUP WITH BELOW IMPORTS, AS THEIR NOT BEING USED.
 const Validate = require('../middleware/validate')
 const DBSt = require('../database/dbSTConfig')
@@ -33,6 +34,7 @@ const tokenmiddleware = require('../middleware/token-middleware')
 
 // * Server uses middleware to add functionality
 server.use(moesifMiddleware)
+server.use(apiThrottler)
 server.use(compression())
 server.use(helmet())
 server.use(cors())
@@ -40,9 +42,9 @@ server.use(express.json())
 
 // * ROUTES BELOW
 server.use('/api/apikeyRoute', apikeyRoute)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
+server.use('/sauti/client', clientRouter)
 server.use('/api/users', userRoleRouter)
-server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter, apiThrottler)
-server.use('/sauti/client', clientRouter, apiThrottler)
 
 // * LANDING PAGE FOR BE
 server.get('/', (req, res) => {
