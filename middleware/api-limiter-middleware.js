@@ -65,8 +65,9 @@ module.exports = async (req, res, next) => {
           client.set(userId, newCalls) // Update # of calls in redis cache
 
 
-          //TODO BAO PLEASE REMOVE THIS. THIS IS FOR TESTING:  
-          console.log(`Api Call Count`, await client.get(userId))
+
+          // TODO: WRITE TO TABLE TO RECORD COUNT DATA
+          console.log(`Api Call Count`, await client.get(key))
           next()
         } else
           res.status(403).json({
