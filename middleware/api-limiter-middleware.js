@@ -42,6 +42,8 @@ module.exports = async (req, res, next) => {
 
     // test if the period exceeds 30 days. If so, reset the count in redis, update the reset_date to the current date in milliseconds 
 
+    //TODO MATT change redis key:values to userId:count (instead of key:count)
+
       if (currentPeriod > 30){
         await client.set(userId, 1);
 
@@ -63,6 +65,8 @@ module.exports = async (req, res, next) => {
 
           // TODO: WRITE TO TABLE TO RECORD COUNT DATA
           console.log(`Api Call Count`, await client.get(userId))
+
+          client.set(userId, newCalls) // Update # of calls in redis cache
 
 
           // Send updated call count to FE in response body. 
@@ -92,7 +96,6 @@ module.exports = async (req, res, next) => {
 
 
 /*
-
 * added date_generated column
 * added logic to create a new date and write to
   table so that we can calculate quota reset in Apikeyroute
