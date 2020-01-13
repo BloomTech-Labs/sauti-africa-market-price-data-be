@@ -17,6 +17,10 @@ exports.up = function (knex) {
       .integer('apikey_count')
       .defaultTo(0)
       .notNullable()
+    tbl
+      .string('user_role')
+      .defaultTo('freeUser')
+      .notNullable()
   })
 }
 
