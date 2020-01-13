@@ -17,6 +17,8 @@ module.exports = {
 async function getSautiData(query) {
   let { startDate, endDate, count } = query
 
+  console.log(`startDate: `, startDate, `endDate: `,endDate, `Count: `, count);
+
   let entries
   let totalCount
 
