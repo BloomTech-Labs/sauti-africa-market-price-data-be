@@ -1,4 +1,4 @@
-const { promisify } = require('util')
+fconst { promisify } = require('util')
 const client = require('../redis')
 //import apikey config for read/write/update of reset_date in api_keys table
 const db = require('../api-key/dbConfig')

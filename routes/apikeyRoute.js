@@ -3,6 +3,7 @@ const router = express.Router()
 const uuidAPIKey = require('uuid-apikey')
 const bcrypt = require('bcryptjs')
 const db = require('../api-key/dbConfig')
+const { fetchUserSchema } = require('../routes/users/utils')
 const jwtCheck = require('../middleware/token-middleware')
 const rules = require('../middleware/rules/rules-middleware');
 
@@ -18,6 +19,7 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const user = await db('apiKeys')
     .where({ user_id: id })
     .first()
+
 
 /* 
 TODO: MATT -- Disallow generation of unlimited API keys 
