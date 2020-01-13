@@ -11,6 +11,9 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
   const key = uuidAPIKey.create()
   const { id } = req.body;
 
+  req.body.sub = id;
+  console.log(`req.body.sub`,req.body.sub)
+
   //generate new date to be written to table
   const date = new Date();
   //get the exact date in milliseconds
@@ -20,6 +23,8 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
     .where({ user_id: id })
     .first()
 
+  // const userAuth0 = await fetchUserSchema(req,res);
+  // console.log(`userAuth0`,userAuth0);
 
 /* 
 TODO: MATT -- Disallow generation of unlimited API keys 
