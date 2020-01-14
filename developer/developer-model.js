@@ -228,6 +228,7 @@ function latestPriceByMarket(query) {
     )
     .where('product', `${product}`)
     .andWhere('market', `${market}`)
+    //andWhereBetween('date', [startDate, endDate])
     .orderBy('date', 'desc')
     .limit(1)
 }
@@ -307,3 +308,6 @@ async function getProductPriceRange(query) {
     count: totalCount
   }
 }
+
+
+//andWhereBetween('date', [startDate, endDate])

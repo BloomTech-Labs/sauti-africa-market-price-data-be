@@ -35,16 +35,12 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
     // "sub": `${id}`
   }
 
-  
+
 
   axios.post('http://localhost:8888/api/users/', idObject)
   .then(response => {
     console.log(response.data.app_metadata.role)
     role = response.data.app_metadata.role;
-    return role
-  })
-  .then(role => {
-    console.log(`role`,role)
     return role
   })
   .then(role => {
@@ -57,7 +53,7 @@ router.post('/private', jwtCheck, rules, async (req, res) => {
             .update({ key: hash, user_role: role})
           res.status(200).json({ existed: true, key: key.apiKey })
         } catch (err) {
-          console.log(err)
+          console.log(`ApiKeyRoute Error: `,err)
         }
       } else {
         try {

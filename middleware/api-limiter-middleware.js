@@ -64,8 +64,6 @@ module.exports = async (req, res, next) => {
           // Update # of calls in redis cache
           client.set(userId, newCalls) 
 
-          // TODO: WRITE TO TABLE TO RECORD COUNT DATA
-          console.log(`Api Call Count`, await client.get(userId))
           const count = await client.get(userId)
 
           await db('apiKeys')
