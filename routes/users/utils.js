@@ -34,7 +34,7 @@ const fetchUserSchema = async (req, res) => {
             }
 
             return request(managementAPI)
-                .then(result => fetchedData = { ...fetchedData, ...JSON.parse(result) })
+                .then(result => { fetchedData = { ...fetchedData, ...JSON.parse(result) }})
                 .then(result => res.status(200).json(fetchedData))
         })
 }
