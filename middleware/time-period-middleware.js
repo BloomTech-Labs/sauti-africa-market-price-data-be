@@ -33,15 +33,15 @@ user case: a paid user wants data returned from a specific period within their a
 
 */
 
-//import database access
-const db = require('../api-key/dbConfig')
 
 module.exports = async (req,res,next) => {
 
+//pull role from req
 const { role } = req
 
-console.log(`timeperiodmiddleware`,role)  
+console.log(`time period middleware`,role)  
 
+//set values for todayDate, convert todayDate to MS, set values for freePeriod/paidPeriod in milliseconds
 const todayDate = new Date()
 const todayMS = todayDate.getTime()
 const freePeriod = Number(604800000);
@@ -49,19 +49,28 @@ const paidPeriod = Number(63072000000)
 
 
 if (role === 'freeUser'){
-    const startDate = (Number(todayDate) - Number(freePeriod))
-    console.log(startDate);
+    //calculate startDate
+    const startDate = (Number(todayMS) - Number(freePeriod));
+    //set allowedStart in req before passing to router
     req.allowedStart = startDate;
 
-} else if (role === 'paidUser' || role === 'admin'){
-    const startDate = (Number(todayDate) - Number(paidPeriod))
-    console.log(startDate);
-
+    //! if calendar dates are needed; if not, remove.
     const calendarStart = new Date(startDate)
     console.log(calendarStart);
+
+} else if (role === 'paidUser' || role === 'admin'){
+
+    //calculate startDate
+    const startDate = (Number(todayMS) - Number(paidPeriod));
+    //set allowedStart in req
     req.allowedStart = startDate;
+
+    //! depending on how dates are handled in db/model, may need to convert startDate in MS to calendar date
+    //Converts start date from MS to calendar date
+    const calendarStart = new Date(startDate)
+    console.log(calendarStart);
+    
+    
 }
-
 next()
-
 }
