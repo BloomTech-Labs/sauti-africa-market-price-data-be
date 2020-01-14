@@ -19,6 +19,18 @@ const allowedStart = new Date(startDate)
 3) assign to request key
 req.allowedStart = allowedStart
 
+4) next()
+
+implications for developer-model and client-model: 
+
+*in each model, for endpoints that allow specifying whereInBetween with start/end dates, the provided dates must be compared against allowed date. If specified date exceeds allowed, then the start date must be overwritten with the allowedStart. 
+
+use case: a freeUser only wants data returned for 2 calendar days that fall within their 7 day limit. negative case: a freeUser wants return data for a period before their allowedStart (not permitted)
+
+user case: a paid user wants data returned from a specific period within their allowed period. Example: allowedStart is 01/14/2018, but user requests 12/01/2019-12/31/2019 (permitted), or negative case, allowedStart is 01/14/2018, but user requests data from 01/01/2013 (not permitted).
+
+*This only needs to be done for routes that return records. Routes that return lists of options/markets/products/etc should not be restricted by the allowedStart date. 
+
 */
 
 //import database access
