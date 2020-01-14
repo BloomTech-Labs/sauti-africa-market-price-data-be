@@ -12,6 +12,7 @@ const devRouter = require('../developer/developer-router.js')
 const clientRouter = require('../client/client-router.js')
 const userRoleRouter = require('../routes/users/userRoles')
 const rateLimit = require("express-rate-limit") //throttling package
+const timePeriod = require('../middleware/time-period-middleware')
 
 //Initialize the rate limit 
 const apiThrottler = rateLimit({
@@ -42,7 +43,7 @@ server.use(express.json())
 
 // * ROUTES BELOW
 server.use('/api/apikeyRoute', apikeyRoute)
-server.use('/sauti/developer', apiAuthenticator, apiLimiter, devRouter)
+server.use('/sauti/developer', apiAuthenticator, apiLimiter, timePeriod, devRouter)
 server.use('/sauti/client', clientRouter)
 server.use('/api/users', userRoleRouter)
 

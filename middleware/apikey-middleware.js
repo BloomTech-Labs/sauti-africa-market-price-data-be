@@ -22,12 +22,15 @@ module.exports = async (req, res, next) => {
         if (k) {
           //set hashedKey for user_id lookup
           hashedKey = candidate.key
+
+          //assign hashedKey to request
+          req.hashedKey = hashedKey;
           
-          //db lookup the user_id based on the key
+          //db lookup the user_id and user_role based on the key
           userId = await db('apiKeys')
-          .select('user_id')
+          .select('user_id', 'user_role')
           .where({key:hashedKey}) 
-          console.log(`userID:`,userId[0].user_id)
+          console.log(`userID:`,userId[0].user_id, `user_role`, userId[0].user_role)
           validKey = key
             break
         }
@@ -41,6 +44,7 @@ module.exports = async (req, res, next) => {
   if (validKey) {
     req.key = validKey
     req.userId = userId[0].user_id
+    req.role = userId[0].user_role
     next()
   } else {
     res.status(403).json({

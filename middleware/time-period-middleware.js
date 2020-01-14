@@ -38,10 +38,30 @@ const db = require('../api-key/dbConfig')
 
 module.exports = async (req,res,next) => {
 
+const { role } = req
+
+console.log(`timeperiodmiddleware`,role)  
+
+const todayDate = new Date()
+const todayMS = todayDate.getTime()
+const freePeriod = Number(604800000);
+const paidPeriod = Number(63072000000)
 
 
+if (role === 'freeUser'){
+    const startDate = (Number(todayDate) - Number(freePeriod))
+    console.log(startDate);
+    req.allowedStart = startDate;
 
+} else if (role === 'paidUser' || role === 'admin'){
+    const startDate = (Number(todayDate) - Number(paidPeriod))
+    console.log(startDate);
 
+    const calendarStart = new Date(startDate)
+    console.log(calendarStart);
+    req.allowedStart = startDate;
+}
 
+next()
 
 }
