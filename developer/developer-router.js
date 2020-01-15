@@ -70,18 +70,18 @@ router.get(
   validate.queryProduct,
   (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query)
-      .then(records => {
-        console.log(`latestPrice returned data: `,records)
-        if (!records[0] || records[0].length < 1) {
+      .then(result => {
+        console.log(`latestPrice returned data: `,result)
+        if (!result.records[0] || result.records[0].length < 1) {
           res.status(404).json({
             apiCount: parseInt(req.count),
             message:
               "The product entered doesn't exist in the database, please check the list of available products"
           })
         } else {
-          convertCurrencies(records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+          convertCurrencies(result.records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
-              console.log(`converted: `,converted)
+              // console.log(`converted: `,converted)
 
               res.status(200).json({
                 apiCount: parseInt(req.count),

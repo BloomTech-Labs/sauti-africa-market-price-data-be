@@ -196,10 +196,11 @@ async function getSautiData(query) {
 
 
 // fn to get the latest price for a product across all markets //
-//! needs historical data restriction
-function latestPriceAcrossAllMarkets(query) {
+
+async function latestPriceAcrossAllMarkets(query) {
   const { product } = query
-  return DBSt.schema.raw(
+
+  const records = await DBSt.schema.raw(
     `SELECT pmp.source, pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.currency, pmp.date, pmp.udate FROM platform_market_prices2 AS pmp INNER JOIN
     (
         SELECT max(date) as maxDate, market, product, retail, currency, wholesale, source, udate 
@@ -213,7 +214,16 @@ function latestPriceAcrossAllMarkets(query) {
      order by pmp.date desc`,
     [product, product]
   )
+  console.log(`records `, records[0][0].date)
+  
+  const returnData = {
+    "most_recent_date":records[0][0].date,
+    records
+  }
+  return returnData
 }
+
+
 // fn to get the latest price for a product by market //
 function latestPriceByMarket(query) {
   const { product, market } = query

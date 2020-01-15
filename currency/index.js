@@ -77,11 +77,11 @@ const convertCurrency = (source, target, value, exchangeRates) => {
 }
 
 module.exports = async (data, targetCurrency) => {
-  console.log(`data.records `, data)
+  // console.log(`data.records `, data)
   return await getExchangeRates()
     .then(rates => {
-      console.log(`rates`,rates)
-      console.log(`data`,data)
+      // console.log(`rates`,rates)
+      // console.log(`data`,data)
       if (!data.records){
         return {
           ratesUpdated: rates.updated,
