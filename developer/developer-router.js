@@ -23,6 +23,11 @@ router.get(
         } else {
           convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
+              
+              const startDate = new Date(converted.first_record_date)
+              console.log(`first_record_date `,converted.first_record_date, `StartDate `,startDate)
+
+
               converted.count
                 ? res.status(200).json({
                     apiCount: parseInt(req.count),
@@ -32,6 +37,7 @@ router.get(
                     ratesUpdated: converted.ratesUpdated,
                     next: converted.next,
                     topPageValue: converted.prev,
+                    first_record_date: converted.first_record_date,
                     pageCount: converted.count[0]['count(*)']
                   })
                 : res.status(200).json({
@@ -41,7 +47,8 @@ router.get(
                     records: converted.data,
                     ratesUpdated: converted.ratesUpdated,
                     next: converted.next,
-                    topPageValue: converted.prev
+                    topPageValue: converted.prev,
+                    first_record_date: converted.first_record_date
                   })
             })
             .catch(error => {
@@ -64,6 +71,7 @@ router.get(
   (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query)
       .then(records => {
+        console.log(`latestPrice returned data: `,records)
         if (!records[0] || records[0].length < 1) {
           res.status(404).json({
             apiCount: parseInt(req.count),
@@ -73,6 +81,8 @@ router.get(
         } else {
           convertCurrencies(records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
+              console.log(`converted: `,converted)
+
               res.status(200).json({
                 apiCount: parseInt(req.count),
                 warning: converted.warning,

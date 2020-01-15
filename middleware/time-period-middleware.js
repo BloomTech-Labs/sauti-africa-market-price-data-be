@@ -47,30 +47,36 @@ const todayMS = todayDate.getTime()
 const freePeriod = Number(604800000);
 const paidPeriod = Number(63072000000)
 
-
-if (role === 'freeUser'){
-    //calculate startDate
-    const startDate = (Number(todayMS) - Number(freePeriod));
-    //set allowedStart in req before passing to router
-    req.allowedStart = startDate;
-
-    //! if calendar dates are needed; if not, remove.
-    const calendarStart = new Date(startDate)
-    console.log(calendarStart);
-
-} else if (role === 'paidUser' || role === 'admin'){
-
-    //calculate startDate
-    const startDate = (Number(todayMS) - Number(paidPeriod));
-    //set allowedStart in req
-    req.allowedStart = startDate;
-
-    //! depending on how dates are handled in db/model, may need to convert startDate in MS to calendar date
-    //Converts start date from MS to calendar date
-    const calendarStart = new Date(startDate)
-    console.log(calendarStart);
-    
-    
-}
 next()
+
 }
+
+
+
+
+
+// if (role === 'freeUser'){
+//     //calculate startDate
+//     const startDate = (Number(todayMS) - Number(freePeriod));
+//     //set allowedStart in req before passing to router
+//     req.allowedStart = startDate;
+
+//     //! if calendar dates are needed; if not, remove.
+//     const calendarStart = new Date(startDate)
+//     console.log(calendarStart);
+
+// } else if (role === 'paidUser' || role === 'admin'){
+
+//     //calculate startDate
+//     const startDate = (Number(todayMS) - Number(paidPeriod));
+//     //set allowedStart in req
+//     req.allowedStart = startDate;
+
+//     //! depending on how dates are handled in db/model, may need to convert startDate in MS to calendar date
+//     //Converts start date from MS to calendar date
+//     const calendarStart = new Date(startDate)
+//     console.log(calendarStart);
+    
+    
+// }
+// next()

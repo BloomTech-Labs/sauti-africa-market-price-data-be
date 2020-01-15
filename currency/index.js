@@ -10,7 +10,7 @@ client.get = promisify(client.get)
 
 const getExchangeRates = async () => {
 
-  console.log(`getExchangeRates start`)
+  
 
   const defaultRates = {
     // Fallback in case currency API goes down. Instead of being a static object, we can ultimately cache most recent successful call in redis and pull it from there
@@ -44,7 +44,7 @@ const getExchangeRates = async () => {
   const recent = await client.get('recentExchangeRates') // Check redis cache for recent exchange rate data
 
   if (recent) {
-    console.log(`exchange rates`, recent)
+    
     return JSON.parse(recent)
   } else {
     return await axios
@@ -52,7 +52,7 @@ const getExchangeRates = async () => {
         'http://sautiafrica.org/endpoints/api.php?url=v1/exchangeRates/&type=json'
       )
       .then(res => {
-        console.log(`inside exchange rate fetch, success`)
+        
         res.data.updated = new Date().toUTCString() // Store time we pulled from the API
         client.set('recentExchangeRates', JSON.stringify(res.data), 'EX', 600) // cache for 10 minutes
         client.set('lastKnownExchangeRates', JSON.stringify(res.data)) // cache indefinitely as fallback in case API goes down and recentExchangeRates has expired
@@ -60,7 +60,7 @@ const getExchangeRates = async () => {
       })
       .catch(async error => {
         // If API call fails and there is no fresh result in cache, return last successfull pull from the API if found, otherwise return default rates
-        console.log(`inside exchange rate fetch, failure `, error)
+        
         const lastKnown = await client.get('lastKnownExchangeRates')
         return lastKnown ? JSON.parse(lastKnown) : defaultRates
       })
@@ -70,10 +70,8 @@ const getExchangeRates = async () => {
 // Convert current currency value to USD as a base and then to its target currency
 const convertCurrency = (source, target, value, exchangeRates) => {
   if (source !== target && exchangeRates[source].rate !== 0) {
-    console.log(`inside convertCurrency if`)
     return (value / exchangeRates[source].rate) * exchangeRates[target].rate
   } else {
-    console.log(`inside convertCurrency else`)
     return value
   } 
 }
@@ -82,7 +80,8 @@ module.exports = async (data, targetCurrency) => {
   console.log(`data.records `, data)
   return await getExchangeRates()
     .then(rates => {
-      console.log(rates)
+      console.log(`rates`,rates)
+      console.log(`data`,data)
       if (!data.records){
         return {
           ratesUpdated: rates.updated,
@@ -104,7 +103,8 @@ module.exports = async (data, targetCurrency) => {
           }),
           next: data.next,
           prev: data.prev,
-          count: data.count
+          count: data.count,
+          first_record_date:data.first_record_date
         }
       } else {
         return {
@@ -127,7 +127,8 @@ module.exports = async (data, targetCurrency) => {
           }),
           next: data.next,
           prev: data.prev,
-          count: data.count
+          count: data.count,
+          first_record_date:data.first_record_date
         }
       }
     })

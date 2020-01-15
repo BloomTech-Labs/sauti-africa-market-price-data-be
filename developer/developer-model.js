@@ -187,12 +187,16 @@ async function getSautiData(query) {
 
   return {
     records: entriesOffset,
+    first_record_date:firstEntry.date,
     next: next,
     prev: prev,
     count: totalCount
   }
 }
+
+
 // fn to get the latest price for a product across all markets //
+//! needs historical data restriction
 function latestPriceAcrossAllMarkets(query) {
   const { product } = query
   return DBSt.schema.raw(
@@ -228,7 +232,6 @@ function latestPriceByMarket(query) {
     )
     .where('product', `${product}`)
     .andWhere('market', `${market}`)
-    //andWhereBetween('date', [startDate, endDate])
     .orderBy('date', 'desc')
     .limit(1)
 }
@@ -252,6 +255,7 @@ function getListsOfThings(query, selector) {
   }
 }
 // fn that returns records for a product via date range, with pagination //
+//! needs restriction
 async function getProductPriceRange(query) {
   let { product, startDate, endDate, count } = query
 
@@ -309,5 +313,3 @@ async function getProductPriceRange(query) {
   }
 }
 
-
-//andWhereBetween('date', [startDate, endDate])
