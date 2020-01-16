@@ -12,11 +12,15 @@ const CALL_LIMIT = 10000 // change as needed
 module.exports = async (req, res, next) => {
   //get api key and role and user_id from req/req headers
 
-  console.log(req.key);
+  console.log(
+    `req.key`,req.key,
+    `req.role`,req.role,
+    `req.userId`,req.userId
+    );
+
   const { key } = req;
-  const { role } = req.headers;
+  const { role } = req;
   const { userId } = req;
-  // const role = 'freeUser'; //testing, remove this
 
   if (role === 'freeUser') {
 
@@ -27,16 +31,11 @@ module.exports = async (req, res, next) => {
 
     //generate todays date in milliseconds
       const currentDate = new Date();
-      console.log(resetStart[0].reset_date);
-      console.log(currentDate);
       const currentDateMS = currentDate.getTime();
-      console.log(currentDateMS);
 
     //calculate the elapsed days
       const elapsedDays = Number(currentDateMS) - Number(resetStart[0].reset_date);
-      console.log(elapsedDays);
       const currentPeriod = elapsedDays/(1000*3600*24);
-      console.log(currentPeriod);
       const remainingDays = 30 - currentPeriod;
 
 
@@ -82,15 +81,26 @@ module.exports = async (req, res, next) => {
           next()
         } else
           // return status notifying user they have exceeded count and days before reset. 
+
           res.status(403).json({
             message: `Key: ${key} has exceeded the call limit of ${CALL_LIMIT} calls. Call limit will reset in ${remainingDays} days.`
+
           })
       } else {
         // Create a new key in redis cache
         client.set(userId, 1)
+
+        let currentCount = await client.get(userId)
+        
+        //pass count 
+        req.count = currentCount;
+        
         next()
       }
   } else {
+    
+    req.count = 0
+    
     next()
   }
 };

@@ -77,11 +77,11 @@ const convertCurrency = (source, target, value, exchangeRates) => {
 }
 
 module.exports = async (data, targetCurrency) => {
-  // console.log(`data.records `, data)
+  // console.log(`currency data `, data)
   return await getExchangeRates()
     .then(rates => {
       // console.log(`rates`,rates)
-      // console.log(`data`,data)
+    //  console.log(`data.records `,data)
       if (!data.records){
         return {
           ratesUpdated: rates.updated,
@@ -104,7 +104,7 @@ module.exports = async (data, targetCurrency) => {
           next: data.next,
           prev: data.prev,
           count: data.count,
-          first_record_date:data.first_record_date
+          recentRecordDate:data.recentRecordDate
         }
       } else {
         return {
@@ -128,7 +128,7 @@ module.exports = async (data, targetCurrency) => {
           next: data.next,
           prev: data.prev,
           count: data.count,
-          first_record_date:data.first_record_date
+          recentRecordDate:data.recentRecordDate
         }
       }
     })

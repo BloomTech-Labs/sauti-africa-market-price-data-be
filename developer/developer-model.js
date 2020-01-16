@@ -14,10 +14,8 @@ module.exports = {
 // Used whereIn in the if/else if statements so that the query can be turned into an array
 // if/else if statements used for countries, markets, etc. for single selection and multiple selection
 
-async function getSautiData(query) {
+async function getSautiData(query,apiCount) {
   let { startDate, endDate, count } = query
-
-  console.log(`startDate: `, startDate, `endDate: `,endDate, `Count: `, count);
 
   let entries
   let totalCount
@@ -187,7 +185,7 @@ async function getSautiData(query) {
 
   return {
     records: entriesOffset,
-    first_record_date:firstEntry.date,
+    recentRecordDate:firstEntry.date,
     next: next,
     prev: prev,
     count: totalCount
@@ -214,21 +212,19 @@ async function latestPriceAcrossAllMarkets(query) {
      order by pmp.date desc`,
     [product, product]
   )
-  console.log(`records `, records[0][0].date)
-  
-  const returnData = {
-    "most_recent_date":records[0][0].date,
-    records
+ 
+  return {
+    records:records[0],
+    recentRecordDate:records[0][0].date,
   }
-  return returnData
 }
 
 
 // fn to get the latest price for a product by market //
-function latestPriceByMarket(query) {
+async function latestPriceByMarket(query) {
   const { product, market } = query
   let queryOperation = DBSt('platform_market_prices2')
-  return queryOperation
+  const queryResult = await queryOperation
     .select(
       'market',
       'source',
@@ -244,7 +240,25 @@ function latestPriceByMarket(query) {
     .andWhere('market', `${market}`)
     .orderBy('date', 'desc')
     .limit(1)
+  
+    // console.log(queryResult[0].date)
+  
+  const result = [queryResult[0]]
+  
+  const returnData = {
+    "most_recent_date":result[0].date,
+    "result":result
+  }
+
+  console.log(`returnData `, returnData)
+
+  return returnData
+  
 }
+
+
+
+
 // fn that returns a list of items, markets by default //
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt('platform_market_prices2')
