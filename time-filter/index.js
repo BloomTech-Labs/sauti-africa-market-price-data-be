@@ -1,6 +1,7 @@
 
 
 module.exports = async (data, allowedPeriod ) =>{
+    console.log(`data time filter `, data.data.length)
 
     //create date from most recent record in returned data
     const recentDate = new Date(data.recentRecordDate)
@@ -20,7 +21,7 @@ module.exports = async (data, allowedPeriod ) =>{
         return (recordDateMS > recordStartMS)
     })
 
-    console.log(`filteredResults `,filteredResults)
+    console.log(`filteredResults `, await filteredResults)
 
     return {
          warning:data.warning,

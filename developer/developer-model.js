@@ -241,18 +241,13 @@ async function latestPriceByMarket(query) {
     .orderBy('date', 'desc')
     .limit(1)
   
-    // console.log(queryResult[0].date)
-  
   const result = [queryResult[0]]
-  
-  const returnData = {
-    "most_recent_date":result[0].date,
-    "result":result
+
+
+  return {
+    records:result,
+    recentRecordDate:result[0].date
   }
-
-  console.log(`returnData `, returnData)
-
-  return returnData
   
 }
 
