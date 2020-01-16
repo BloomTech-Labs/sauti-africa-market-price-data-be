@@ -158,6 +158,8 @@ router.get('/lists', (req, res) => {
     })
 })
 
+
+//! requires filtering
 //Req.query needs product,startDate,endDate and returns a range of records
 //startDate is older than endDate
 //requires further validation possibly with moment.js to validate the date values//stretch goal for later
@@ -169,29 +171,33 @@ router.get(
   (req, res) => {
     Developer.getProductPriceRange(req.query)
       .then(records => {
+        console.log(`records product range `,records)
         convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
-          .then(converted => {
-            converted.count
-              ? res.status(200).json({
-                  apiCount: parseInt(req.count),
-                  warning: converted.warning,
-                  message: req.message,
-                  records: converted.data,
-                  ratesUpdated: converted.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev,
-                  pageCount: converted.count[0]['count(*)']
-                })
-              : res.status(200).json({
-                  apiCount: parseInt(req.count),
-                  warning: converted.warning,
-                  message: req.message,
-                  records: converted.data,
-                  ratesUpdated: converted.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev
-                })
-          })
+        .then(converted => {
+          allowedPeriodFilter(converted,req.allowableTimePeriod)
+          .then(filtered => {
+            filtered.count
+            ? res.status(200).json({
+                apiCount: parseInt(req.count),
+                warning: filtered.warning,
+                message: req.message,
+                records: filtered.records,
+                ratesUpdated: filtered.ratesUpdated,
+                next: converted.next,
+                topPageValue: converted.prev,
+                pageCount: converted.count[0]['count(*)']
+              })
+            : res.status(200).json({
+                apiCount: parseInt(req.count),
+                warning: converted.warning,
+                message: req.message,
+                records: filtered.records,
+                ratesUpdated: converted.ratesUpdated,
+                next: converted.next,
+                topPageValue: converted.prev
+              })
+        })
+        })
           .catch(error => {
             console.log(error)
           })
