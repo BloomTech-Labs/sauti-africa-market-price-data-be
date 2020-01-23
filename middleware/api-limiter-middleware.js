@@ -12,11 +12,11 @@ const CALL_LIMIT = 10000 // change as needed
 module.exports = async (req, res, next) => {
   //get api key and role and user_id from req/req headers
 
-  console.log(
-    `req.key`,req.key,
-    `req.role`,req.role,
-    `req.userId`,req.userId
-    );
+  // console.log(
+  //   `req.key`,req.key,
+  //   `req.role`,req.role,
+  //   `req.userId`,req.userId
+  //   );
 
   const { key } = req;
   const { role } = req;

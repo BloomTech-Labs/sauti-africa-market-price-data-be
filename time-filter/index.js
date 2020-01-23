@@ -13,7 +13,7 @@ module.exports = async (data, allowedPeriod ) =>{
     //calculate earliest allowable date. (recentMS - 7days) for free users or (recentMS - 730 days) for paid users.
     const recordStartMS = (recentMS - allowedPeriod)
     
-
+    //filter results that are within range
     let filteredResults = await data.data.filter(record => {
         const recordDate = new Date(record.date)
         const recordDateMS = recordDate.getTime()
@@ -21,8 +21,7 @@ module.exports = async (data, allowedPeriod ) =>{
         return (recordDateMS > recordStartMS)
     })
 
-    console.log(`filteredResults `, await filteredResults)
-
+    
     return {
          warning:data.warning,
          records: filteredResults,

@@ -274,7 +274,7 @@ function getListsOfThings(query, selector) {
   }
 }
 // fn that returns records for a product via date range, with pagination //
-//! needs restriction
+
 async function getProductPriceRange(query) {
   let { product, startDate, endDate, count } = query
 

@@ -5,7 +5,6 @@ const router = express.Router()
 const convertCurrencies = require('../currency')
 const allowedPeriodFilter = require('../time-filter')
 
-// { apiCount: parseInt(req.count) }
 
 // Giant filter router
 router.get(
@@ -24,7 +23,6 @@ router.get(
         } else {
           convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
           .then(converted => {
-            // console.log(`converted: `,converted)
             allowedPeriodFilter(converted,req.allowableTimePeriod)
             .then(filtered => {
               filtered.count
@@ -34,18 +32,18 @@ router.get(
                   message: req.message,
                   records: filtered.records,
                   ratesUpdated: filtered.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev,
-                  pageCount: converted.count[0]['count(*)']
+                  next: filtered.next,
+                  topPageValue: filtered.prev,
+                  pageCount: filtered.count[0]['count(*)']
                 })
               : res.status(200).json({
                   apiCount: parseInt(req.count),
-                  warning: converted.warning,
+                  warning: filtered.warning,
                   message: req.message,
                   records: filtered.records,
-                  ratesUpdated: converted.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev
+                  ratesUpdated: filtered.ratesUpdated,
+                  next: filtered.next,
+                  topPageValue: filtered.prev
                 })
           })
           })
@@ -71,7 +69,6 @@ router.get(
   (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query)
       .then(result => {
-        // console.log(`latestPrice returned data: `,result)
         if (!result.records[0] || result.records[0].length < 1) {
           res.status(404).json({
             apiCount: parseInt(req.count),
@@ -81,10 +78,8 @@ router.get(
         } else {
           convertCurrencies(result, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
-              // console.log(`converted: `,converted)
               allowedPeriodFilter(converted,req.allowableTimePeriod)
               .then(filtered => {
-                // console.log(filtered)
                 res.status(200).json({
                   data:filtered,
                   message:req.message,
@@ -99,7 +94,6 @@ router.get(
         }
       })
       .catch(error => {
-        console.log(error)
         res.status(500).send(error.message)
       })
   }
@@ -159,7 +153,6 @@ router.get('/lists', (req, res) => {
 })
 
 
-//! requires filtering
 //Req.query needs product,startDate,endDate and returns a range of records
 //startDate is older than endDate
 //requires further validation possibly with moment.js to validate the date values//stretch goal for later
@@ -171,7 +164,6 @@ router.get(
   (req, res) => {
     Developer.getProductPriceRange(req.query)
       .then(records => {
-        console.log(`records product range `,records)
         convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
         .then(converted => {
           allowedPeriodFilter(converted,req.allowableTimePeriod)
@@ -183,18 +175,18 @@ router.get(
                 message: req.message,
                 records: filtered.records,
                 ratesUpdated: filtered.ratesUpdated,
-                next: converted.next,
-                topPageValue: converted.prev,
-                pageCount: converted.count[0]['count(*)']
+                next: filtered.next,
+                topPageValue: filtered.prev,
+                pageCount: filtered.count[0]['count(*)']
               })
             : res.status(200).json({
                 apiCount: parseInt(req.count),
-                warning: converted.warning,
+                warning: filtered.warning,
                 message: req.message,
                 records: filtered.records,
-                ratesUpdated: converted.ratesUpdated,
-                next: converted.next,
-                topPageValue: converted.prev
+                ratesUpdated: filtered.ratesUpdated,
+                next: filtered.next,
+                topPageValue: filtered.prev
               })
         })
         })

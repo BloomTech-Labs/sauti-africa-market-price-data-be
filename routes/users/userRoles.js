@@ -1,4 +1,3 @@
-// TODO: COMPLETE ENDPOINT FUNCTIONALITY. CURRENT STATE IS TESTING DATA FLOW FOR FRONT END
 const router = require('express').Router();
 const { fetchUserSchema, assignUserRole } = require('./utils');
 
