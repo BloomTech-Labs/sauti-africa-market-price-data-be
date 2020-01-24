@@ -17,7 +17,7 @@ const timePeriod = require('../middleware/time-period-middleware')
 //Initialize the rate limit 
 const apiThrottler = rateLimit({
   windowsMs: 0.1 * 60 * 1000,
-  max: 20
+  max: 250
 });
 
 //Initialize Moesif and set up the middleware
