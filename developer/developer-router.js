@@ -3,6 +3,8 @@ const validate = require('../middleware/validate.js')
 const Developer = require('./developer-model.js')
 const router = express.Router()
 const convertCurrencies = require('../currency')
+const allowedPeriodFilter = require('../time-filter')
+
 
 // Giant filter router
 router.get(
@@ -10,38 +12,44 @@ router.get(
   validate.queryCurrency,
   validate.queryCountPage,
   (req, res) => {
-    Developer.getSautiData(req.query)
+    Developer.getSautiData(req.query, req.count)
       .then(response => {
         if (!response.records || response.records.length < 1) {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "Records don't exist here, change the query parameters or change page no. "
           })
         } else {
           convertCurrencies(response, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
-            .then(converted => {
-              converted.count
-                ? res.status(200).json({
-                    warning: converted.warning,
-                    message: req.message,
-                    records: converted.data,
-                    ratesUpdated: converted.ratesUpdated,
-                    next: converted.next,
-                    topPageValue: converted.prev,
-                    pageCount: converted.count[0]['count(*)']
-                  })
-                : res.status(200).json({
-                    warning: converted.warning,
-                    message: req.message,
-                    records: converted.data,
-                    ratesUpdated: converted.ratesUpdated,
-                    next: converted.next,
-                    topPageValue: converted.prev
-                  })
-            })
-            .catch(error => {
-              console.log(error)
-            })
+          .then(converted => {
+            allowedPeriodFilter(converted,req.allowableTimePeriod)
+            .then(filtered => {
+              filtered.count
+              ? res.status(200).json({
+                  apiCount: parseInt(req.count),
+                  warning: filtered.warning,
+                  message: req.message,
+                  records: filtered.records,
+                  ratesUpdated: filtered.ratesUpdated,
+                  next: filtered.next,
+                  topPageValue: filtered.prev,
+                  pageCount: filtered.count[0]['count(*)']
+                })
+              : res.status(200).json({
+                  apiCount: parseInt(req.count),
+                  warning: filtered.warning,
+                  message: req.message,
+                  records: filtered.records,
+                  ratesUpdated: filtered.ratesUpdated,
+                  next: filtered.next,
+                  topPageValue: filtered.prev
+                })
+          })
+          })
+          .catch(error => {
+            console.log(error)
+          })
         }
       })
       .catch(error => {
@@ -51,6 +59,8 @@ router.get(
   }
 )
 
+
+
 //getting the latest market price for a product across all markets
 router.get(
   '/product/latestprice',
@@ -58,21 +68,25 @@ router.get(
   validate.queryProduct,
   (req, res) => {
     Developer.latestPriceAcrossAllMarkets(req.query)
-      .then(records => {
-        if (!records[0] || records[0].length < 1) {
+      .then(result => {
+        if (!result.records[0] || result.records[0].length < 1) {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "The product entered doesn't exist in the database, please check the list of available products"
           })
         } else {
-          convertCurrencies(records[0], req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+          convertCurrencies(result, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
             .then(converted => {
-              res.status(200).json({
-                warning: converted.warning,
-                message: req.message,
-                records: converted.data,
-                ratesUpdated: converted.ratesUpdated
+              allowedPeriodFilter(converted,req.allowableTimePeriod)
+              .then(filtered => {
+                res.status(200).json({
+                  data:filtered,
+                  message:req.message,
+                  apiCount:req.count
+                })
               })
+              .catch(error => console.log(error))
             })
             .catch(error => {
               console.log(error)
@@ -80,7 +94,6 @@ router.get(
         }
       })
       .catch(error => {
-        console.log(error)
         res.status(500).send(error.message)
       })
   }
@@ -96,20 +109,20 @@ router.get(
     Developer.latestPriceByMarket(req.query)
       .then(record => {
         if (record) {
-          convertCurrencies(record, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
-            .then(converted => {
-              res.status(200).json({
-                warning: converted.warning,
-                message: req.message,
-                record: converted.data,
-                ratesUpdated: converted.ratesUpdated
-              })
+          convertCurrencies(record.records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
+          .then(converted => {
+            res.status(200).json({
+              data:converted,
+              message:req.message,
+              apiCount:req.count
             })
-            .catch(error => {
-              console.log(error)
-            })
+          })
+          .catch(error => {
+            console.log(error)
+          })
         } else {
           res.status(404).json({
+            apiCount: parseInt(req.count),
             message:
               "That product and market combination doesn't exist, please check spelling and list of products and markets"
           })
@@ -126,13 +139,17 @@ router.get(
 router.get('/lists', (req, res) => {
   Developer.getListsOfThings(req.query.list)
     .then(records => {
-      res.status(200).json(records)
+      res.status(200).json({
+        apiCount: parseInt(req.count),
+        records
+      })
     })
     .catch(error => {
       console.log(error)
       res.status(500).send(error.message)
     })
 })
+
 
 //Req.query needs product,startDate,endDate and returns a range of records
 //startDate is older than endDate
@@ -146,26 +163,31 @@ router.get(
     Developer.getProductPriceRange(req.query)
       .then(records => {
         convertCurrencies(records, req.currency) // Sauti wishes for all currency values to pass through conversion. See further notes in /currency
-          .then(converted => {
-            converted.count
-              ? res.status(200).json({
-                  warning: converted.warning,
-                  message: req.message,
-                  records: converted.data,
-                  ratesUpdated: converted.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev,
-                  pageCount: converted.count[0]['count(*)']
-                })
-              : res.status(200).json({
-                  warning: converted.warning,
-                  message: req.message,
-                  records: converted.data,
-                  ratesUpdated: converted.ratesUpdated,
-                  next: converted.next,
-                  topPageValue: converted.prev
-                })
-          })
+        .then(converted => {
+          allowedPeriodFilter(converted,req.allowableTimePeriod)
+          .then(filtered => {
+            filtered.count
+            ? res.status(200).json({
+                apiCount: parseInt(req.count),
+                warning: filtered.warning,
+                message: req.message,
+                records: filtered.records,
+                ratesUpdated: filtered.ratesUpdated,
+                next: filtered.next,
+                topPageValue: filtered.prev,
+                pageCount: filtered.count[0]['count(*)']
+              })
+            : res.status(200).json({
+                apiCount: parseInt(req.count),
+                warning: filtered.warning,
+                message: req.message,
+                records: filtered.records,
+                ratesUpdated: filtered.ratesUpdated,
+                next: filtered.next,
+                topPageValue: filtered.prev
+              })
+        })
+        })
           .catch(error => {
             console.log(error)
           })
