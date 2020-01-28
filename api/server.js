@@ -27,12 +27,6 @@ const moesifMiddleware = moesifExpress({
   logBody: true
 })
 
-
-// TODO: POSSIBL CODE CLEANUP WITH BELOW IMPORTS, AS THEIR NOT BEING USED.
-const Validate = require('../middleware/validate')
-const DBSt = require('../database/dbSTConfig')
-const tokenmiddleware = require('../middleware/token-middleware')
-
 // * Server uses middleware to add functionality
 server.use(moesifMiddleware)
 server.use(apiThrottler)

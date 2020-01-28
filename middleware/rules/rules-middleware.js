@@ -1,4 +1,3 @@
-// TODO: IMPLEMENT CRUD CALLS FROM API DOCUMENTATION FOR MIDDLEWARE.
 const request = require('request')
 
 // * SETTINGS FOR REQUEST PACKAGE BELOW
@@ -25,8 +24,6 @@ module.exports = async (req, res, next) => {
   request(options, async (error, response, body) => {
     apiToken = JSON.parse(body).access_token
 
-    // ! LOG TOKEN DATA BELOW
-    // console.log(apiToken)
 
     // * ONCE TOKEN FOR API IS RECEIVED, USE API CALLS
     if (!!apiToken === true) {
@@ -53,9 +50,6 @@ module.exports = async (req, res, next) => {
         if (error) throw new Error(error)
 
         addRolesToUser(user);
-
-        // ! LOG INFORMATION BELOW
-        // console.log('BODY REQUEST', user)
       })
     }
   })
