@@ -5,7 +5,8 @@ module.exports = async (req, res, next) => {
   const { key } = req.headers
 
   let validKey = null
-
+  let userId = null
+  let hashedKey
   const keyCandidates = await db('apiKeys')
 
   /*=== checks validity of key ===*/
@@ -19,8 +20,19 @@ module.exports = async (req, res, next) => {
         const k = await bcrypt.compare(key, candidate.key)
 
         if (k) {
+          //set hashedKey for user_id lookup
+          hashedKey = candidate.key
+
+          //assign hashedKey to request
+          req.hashedKey = hashedKey;
+          
+          //db lookup the user_id and user_role based on the key
+          userId = await db('apiKeys')
+          .select('user_id', 'user_role')
+          .where({key:hashedKey}) 
+          console.log(`userID:`,userId[0].user_id, `user_role`, userId[0].user_role)
           validKey = key
-          break
+            break
         }
       }
     } catch (err) {
@@ -31,6 +43,8 @@ module.exports = async (req, res, next) => {
   /*=== sends key on req object to apiLim middleware ===*/
   if (validKey) {
     req.key = validKey
+    req.userId = userId[0].user_id
+    req.role = userId[0].user_role
     next()
   } else {
     res.status(403).json({

@@ -14,7 +14,7 @@ module.exports = {
 // Used whereIn in the if/else if statements so that the query can be turned into an array
 // if/else if statements used for countries, markets, etc. for single selection and multiple selection
 
-async function getSautiData(query) {
+async function getSautiData(query,apiCount) {
   let { startDate, endDate, count } = query
 
   let entries
@@ -185,15 +185,20 @@ async function getSautiData(query) {
 
   return {
     records: entriesOffset,
+    recentRecordDate:firstEntry.date,
     next: next,
     prev: prev,
     count: totalCount
   }
 }
+
+
 // fn to get the latest price for a product across all markets //
-function latestPriceAcrossAllMarkets(query) {
+
+async function latestPriceAcrossAllMarkets(query) {
   const { product } = query
-  return DBSt.schema.raw(
+
+  const records = await DBSt.schema.raw(
     `SELECT pmp.source, pmp.market, pmp.product, pmp.retail, pmp.wholesale, pmp.currency, pmp.date, pmp.udate FROM platform_market_prices2 AS pmp INNER JOIN
     (
         SELECT max(date) as maxDate, market, product, retail, currency, wholesale, source, udate 
@@ -207,12 +212,19 @@ function latestPriceAcrossAllMarkets(query) {
      order by pmp.date desc`,
     [product, product]
   )
+ 
+  return {
+    records:records[0],
+    recentRecordDate:records[0][0].date,
+  }
 }
+
+
 // fn to get the latest price for a product by market //
-function latestPriceByMarket(query) {
+async function latestPriceByMarket(query) {
   const { product, market } = query
   let queryOperation = DBSt('platform_market_prices2')
-  return queryOperation
+  const queryResult = await queryOperation
     .select(
       'market',
       'source',
@@ -228,7 +240,20 @@ function latestPriceByMarket(query) {
     .andWhere('market', `${market}`)
     .orderBy('date', 'desc')
     .limit(1)
+  
+  const result = [queryResult[0]]
+
+
+  return {
+    records:result,
+    recentRecordDate:result[0].date
+  }
+  
 }
+
+
+
+
 // fn that returns a list of items, markets by default //
 function getListsOfThings(query, selector) {
   let queryOperation = DBSt('platform_market_prices2')
@@ -249,6 +274,7 @@ function getListsOfThings(query, selector) {
   }
 }
 // fn that returns records for a product via date range, with pagination //
+
 async function getProductPriceRange(query) {
   let { product, startDate, endDate, count } = query
 
@@ -305,3 +331,4 @@ async function getProductPriceRange(query) {
     count: totalCount
   }
 }
+

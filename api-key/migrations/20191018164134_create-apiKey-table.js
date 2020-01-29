@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.createTable('apiKeys', tbl => {
     tbl.increments()
     tbl
@@ -9,9 +9,22 @@ exports.up = function(knex) {
       .text('user_id')
       .unique()
       .notNullable()
+    //reset_date stores the date as milliseconds as an integer
+    tbl
+      .integer('reset_date')
+      .notNullable()
+    tbl
+      .integer('apikey_count')
+      .defaultTo(0)
+      .notNullable()
+    tbl
+      .string('user_role')
+      .defaultTo('freeUser')
+      .notNullable()
   })
 }
 
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists('apiKeys')
 }
+
