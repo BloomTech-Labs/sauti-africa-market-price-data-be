@@ -42,6 +42,12 @@ async function getSautiDataClient(query, csvLimit) {
     } else if (query.m && Array.isArray(query.m)) {
       queryOperation = queryOperation.whereIn("market", query.m);
     }
+    // If user wants data from specific source
+    if (query.s && !Array.isArray(query.s)) {
+      queryOperation = queryOperation.whereIn("source", [query.s]);
+    } else if (query.s && Array.isArray(query.s)) {
+      queryOperation = queryOperation.whereIn("source", query.s);
+    }
 
     //if user wants data from spcific product categories
     if (query.pcat && !Array.isArray(query.pcat)) {
@@ -121,6 +127,13 @@ async function getSautiDataClient(query, csvLimit) {
       queryOperation = queryOperation.whereIn("market", [query.m]);
     } else if (query.m && Array.isArray(query.m)) {
       queryOperation = queryOperation.whereIn("market", query.m);
+    }
+    
+    // If user wants data from specific source
+    if (query.s && !Array.isArray(query.s)) {
+      queryOperation = queryOperation.whereIn("source", [query.s]);
+    } else if (query.s && Array.isArray(query.s)) {
+      queryOperation = queryOperation.whereIn("source", query.s);
     }
 
     //if user wants data from spcific product categories
@@ -211,6 +224,11 @@ function countryList() {
     .distinct("country")
     .orderBy("country");
 }
+function sourceList() {
+  return DBSt("platform_market_prices2")
+    .distinct("source")
+    .orderBy("source");
+}
 function productList() {
   return DBSt("platform_market_prices2")
     .distinct("product")
@@ -231,19 +249,22 @@ function paggList() {
 function mcpList() {
   const marketQuery = marketList();
   const countryQuery = countryList();
+  const sourceQuery = sourceList();
   const productQuery = productList();
   const pcatQuery = pcatList();
   const paggQuery = paggList();
   return Promise.all([
     marketQuery,
     countryQuery,
+    sourceQuery,
     productQuery,
     pcatQuery,
     paggQuery
-  ]).then(([markets, country, product, category, aggregator]) => {
+  ]).then(([markets, country, source, product, category, aggregator]) => {
     let total = {};
     total.countries = country;
     total.products = product;
+    total.sources = source;
     total.markets = markets;
     total.categories = category;
     total.aggregators = aggregator;
@@ -271,6 +292,12 @@ function getPlay(query) {
     queryOperation = queryOperation.whereIn("market", [query.market]);
   } else if (query.market && Array.isArray(query.market)) {
     queryOperation = queryOperation.whereIn("market", query.market);
+  }
+  // If user wants data from specific source
+  if (query.source && !Array.isArray(query.source)) {
+    queryOperation = queryOperation.whereIn("source", [query.source]);
+  } else if (query.source && Array.isArray(query.source)) {
+    queryOperation = queryOperation.whereIn("source", query.source);
   }
 
   //if user wants data from spcific product categories
