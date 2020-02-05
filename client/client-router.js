@@ -117,7 +117,6 @@ router.get('/export', (req, res) => {
             'id',
             'country',
             'market',
-            'source',
             'product_cat',
             'product_agg',
             'product',
